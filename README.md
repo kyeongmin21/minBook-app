@@ -1,4 +1,4 @@
-# 📖 프로젝트 소개 (minBook - app)
+# 📖 프로젝트 소개 (minBook - App)
 minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한 한줄평과 느낀점을 기록할 수 있는 나만의 독서 기록 앱입니다.
 
 홈 화면에서는 카카오 도서 검색 API를 통해 다양한 책 목록을 확인할 수 있으며,
@@ -29,7 +29,7 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
 - Expo
 - Zustand (상태 관리)
 - AsyncStorage (로컬 데이터 저장)
-- Kakao Book Search API ([링크](https://dapi.kakao.com/v3/search/book) , REST API 키)
+- Kakao Book Search API ([링크](https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book) , REST API 키)
 
 <br/><br/>
 
