@@ -27,7 +27,7 @@ export default function TabReadScreen() {
                     style={{
                         fontFamily: Fonts.rounded,
                     }}>
-                    Cart
+                    Read
                 </ThemedText>
             </ThemedView>
             <ThemedText>This app includes example code to help you get started.</ThemedText>
