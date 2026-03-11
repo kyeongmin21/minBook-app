@@ -1,94 +1,146 @@
-import {Image} from 'expo-image';
-import {Platform, StyleSheet} from 'react-native';
+import {Image} from "expo-image";
+import {StyleSheet, View, TextInput, FlatList, Text} from 'react-native';
+import {useState, useEffect} from 'react';
+import {useQuery, keepPreviousData} from '@tanstack/react-query';
+import {searchBooks} from '@/api/books';
 
-import {HelloWave} from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import {ThemedText} from '@/components/themed-text';
-import {ThemedView} from '@/components/themed-view';
-import {Link} from 'expo-router';
 
 export default function HomeScreen() {
-    return (
-        <ParallaxScrollView
-            headerBackgroundColor={{light: '#A1CEDC', dark: '#1D3D47'}}
-            headerImage={
-                <Image
-                    source={require('@/assets/images/partial-react-logo.png')}
-                    style={styles.reactLogo}
-                />
-            }>
-            <ThemedView style={styles.titleContainer}>
-                <ThemedText type="title">New Books</ThemedText>
-                <HelloWave/>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-                <ThemedText>
-                    Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-                    Press{' '}
-                    <ThemedText type="defaultSemiBold">
-                        {Platform.select({
-                            ios: 'cmd + d',
-                            android: 'cmd + m',
-                            web: 'F12',
-                        })}
-                    </ThemedText>{' '}
-                    to open developer tools.
-                </ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <Link href="/modal">
-                    <Link.Trigger>
-                        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-                    </Link.Trigger>
-                    <Link.Preview/>
-                    <Link.Menu>
-                        <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')}/>
-                        <Link.MenuAction
-                            title="Share"
-                            icon="square.and.arrow.up"
-                            onPress={() => alert('Share pressed')}
-                        />
-                        <Link.Menu title="More" icon="ellipsis">
-                            <Link.MenuAction
-                                title="Delete"
-                                icon="trash"
-                                destructive
-                                onPress={() => alert('Delete pressed')}
-                            />
-                        </Link.Menu>
-                    </Link.Menu>
-                </Link>
+    const [query, setQuery] = useState('');
+    const [debouncedQuery, setDebouncedQuery] = useState("");
 
-                <ThemedText>
-                    {`Tap the Explore tab to learn more about what's included in this starter app.`}
-                </ThemedText>
-            </ThemedView>
-            <ThemedView style={styles.stepContainer}>
-                <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-                <ThemedText>
-                    <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-                </ThemedText>
-            </ThemedView>
-        </ParallaxScrollView>
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedQuery(query);
+        }, 400);
+        return () => clearTimeout(timer);
+    }, [query]);
+
+
+    const {data, isLoading, isError} = useQuery({
+        queryKey: ['books', debouncedQuery],
+        queryFn: () => searchBooks(debouncedQuery || '에세이'),
+        placeholderData: keepPreviousData,
+    });
+
+    return (
+        <View style={styles.container}>
+            <FlatList data={data}
+                      numColumns={2}
+                      columnWrapperStyle={styles.columnWrapper}
+                      contentContainerStyle={{ flexGrow: 1 }}
+                      keyExtractor={(item, index) => item.isbn + index}
+                      ListHeaderComponent={
+                          <View>
+                              <Image
+                                  source={require('@/assets/images/logo.png')}
+                                  style={styles.logo}
+                              />
+                              <TextInput
+                                  style={styles.input}
+                                  placeholder={"검색어를 입력하세요"}
+                                  value={query}
+                                  onChangeText={setQuery}
+                              />
+                          </View>
+                      }
+                      renderItem={({item}) => (
+                          <View style={styles.itemContainer}>
+                              <Image source={{uri: item.thumbnail}} style={styles.thumbnail} contentFit="cover"/>
+                              <View style={styles.textContainer}>
+                                  <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
+                                  <Text style={styles.authors}>{item.authors}</Text>
+                                  <Text style={styles.price}>{item.price?.toLocaleString()}원</Text>
+                                  <Text style={styles.date}>{item.datetime?.split('T')[0]}</Text>
+                              </View>
+                          </View>
+                      )}
+                      ListEmptyComponent={
+                          isLoading ? (
+                              <View style={styles.emptyContainer}>
+                                  <Text style={styles.emptyText}>로딩 중...</Text>
+                              </View>
+                          ) : isError ? (
+                              <View style={styles.emptyContainer}>
+                                  <Text style={styles.emptyText}>에러 발생!</Text>
+                              </View>
+                          ) : null
+                      }
+            />
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    titleContainer: {
-        flexDirection: 'row',
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    logo: {
+        width: 100,
+        height: 100,
+        alignSelf: 'center',
+        marginTop: 15
+    },
+    input: {
+        height: 50,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        paddingHorizontal: 15,
+        marginLeft: 20,
+        marginRight: 20,
+        borderRadius: 10,
+        backgroundColor: '#f9f9f9',
+    },
+    columnWrapper: {
+        justifyContent: 'space-between',
+        paddingHorizontal: 10,
+    },
+    itemContainer: {
+        width: '50%',
+        paddingVertical: 30,   // 위아래 한꺼번에
+        paddingHorizontal: 10, // 좌우 한꺼번에
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+    },
+    thumbnail: {
+        width: '100%',
+        aspectRatio: 2 / 3, // 책 표지 특유의 비율을 유지
+        borderRadius: 8,
+        backgroundColor: '#eee',
+    },
+    textContainer: {
+        justifyContent: 'center',
+    },
+    title: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginBottom: 5,
+    },
+    authors: {
+        fontSize: 14,
+        color: '#666',
+    },
+    price: {
+        fontSize: 14,
+        marginTop: 5,
+        marginBottom: 5,
+        color: '#ff6b6b',
+    },
+    date: {
+        fontSize: 12,
+        color: '#666',
+    },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
-        gap: 8,
+        paddingBottom: 100,
     },
-    stepContainer: {
-        gap: 8,
-        marginBottom: 8,
-    },
-    reactLogo: {
-        height: 178,
-        width: 290,
-        bottom: 0,
-        left: 0,
-        position: 'absolute',
+    emptyText: {
+        fontSize: 16,
+        color: '#999',
+        fontWeight: '500',
     },
 });
