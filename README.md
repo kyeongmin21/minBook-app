@@ -7,6 +7,7 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
 
 독서를 더 편하고 기록하기 쉽게 만들기 위해 제작한 개인 프로젝트입니다.
 
+<br/><br/>
 
 ## 💡 프로젝트를 만들게 된 계기
 
@@ -20,6 +21,7 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
 
 라는 생각으로 공부도 할 겸 이 프로젝트를 시작하게 되었습니다.
 
+<br/><br/>
 
 ## 🛠 기술 스택
 
@@ -29,6 +31,7 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
 - AsyncStorage (로컬 데이터 저장)
 - Kakao Book Search API ([링크](https://dapi.kakao.com/v3/search/book) , REST API 키)
 
+<br/><br/>
 
 ## Get started
 1. Start the app
