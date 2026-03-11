@@ -1,13 +1,16 @@
 import {Image} from "expo-image";
-import {StyleSheet, View, TextInput, FlatList, Text} from 'react-native';
+import {StyleSheet, View, TextInput, FlatList, Text, Pressable} from 'react-native';
 import {useState, useEffect} from 'react';
 import {useQuery, keepPreviousData} from '@tanstack/react-query';
 import {searchBooks} from '@/api/books';
+import {useWishlistStore} from '@/store/useWishlistStore';
+import {Ionicons} from '@expo/vector-icons';
 
 
 export default function HomeScreen() {
     const [query, setQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState("");
+    const {wishlist, toggleWishlist} = useWishlistStore();
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -28,7 +31,7 @@ export default function HomeScreen() {
             <FlatList data={data}
                       numColumns={2}
                       columnWrapperStyle={styles.columnWrapper}
-                      contentContainerStyle={{ flexGrow: 1 }}
+                      contentContainerStyle={{flexGrow: 1}}
                       keyExtractor={(item, index) => item.isbn + index}
                       ListHeaderComponent={
                           <View>
@@ -44,17 +47,34 @@ export default function HomeScreen() {
                               />
                           </View>
                       }
-                      renderItem={({item}) => (
-                          <View style={styles.itemContainer}>
-                              <Image source={{uri: item.thumbnail}} style={styles.thumbnail} contentFit="cover"/>
-                              <View style={styles.textContainer}>
-                                  <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
-                                  <Text style={styles.authors}>{item.authors}</Text>
-                                  <Text style={styles.price}>{item.price?.toLocaleString()}원</Text>
-                                  <Text style={styles.date}>{item.datetime?.split('T')[0]}</Text>
+
+                      renderItem={({item}) => {
+                          const isWished = wishlist.some((w) => w.isbn === item.isbn);
+
+                          return (
+                              <View style={styles.itemContainer}>
+                                  <View>
+                                      <Image source={{uri: item.thumbnail}} style={styles.thumbnail} contentFit="cover"/>
+                                      {/* 하트 버튼 */}
+                                      <Pressable
+                                          onPress={() => toggleWishlist(item)}
+                                          style={styles.wishlistIcon}>
+                                          <Ionicons
+                                              name={isWished ? "heart" : "heart-outline"}
+                                              size={28}
+                                              color={isWished ? "#f3ff3e" : "#f3ff3e"}
+                                          />
+                                      </Pressable>
+                                  </View>
+                                  <View style={styles.textContainer}>
+                                      <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
+                                      <Text style={styles.authors}>{item.authors}</Text>
+                                      <Text style={styles.price}>{item.price?.toLocaleString()}원</Text>
+                                      <Text style={styles.date}>{item.datetime?.split('T')[0]}</Text>
+                                  </View>
                               </View>
-                          </View>
-                      )}
+                          )
+                      }}
                       ListEmptyComponent={
                           isLoading ? (
                               <View style={styles.emptyContainer}>
@@ -108,6 +128,11 @@ const styles = StyleSheet.create({
         aspectRatio: 2 / 3, // 책 표지 특유의 비율을 유지
         borderRadius: 8,
         backgroundColor: '#eee',
+    },
+    wishlistIcon: {
+        position: 'absolute',
+        top: 5,
+        right: 5
     },
     textContainer: {
         justifyContent: 'center',
