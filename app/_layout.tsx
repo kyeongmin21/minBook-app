@@ -1,5 +1,4 @@
 import 'react-native-reanimated';
-import {View, Text} from 'react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {Drawer} from 'expo-router/drawer';
@@ -21,7 +20,7 @@ export default function RootLayout() {
                         }}
                     >
                         <Drawer.Screen name="(tabs)"/>
-                        <Drawer.Screen name="modal"/>
+                        <Drawer.Screen name="login" options={{drawerLabel: '로그인'}}/>
                     </Drawer>
                     <StatusBar style="auto"/>
                 </ThemeProvider>

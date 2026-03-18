@@ -19,6 +19,7 @@
     "@react-navigation/native": "^7.1.33",
     "@tanstack/react-query": "^5.90.21",
     "axios": "^1.13.6",
+    "babel-plugin-transform-import-meta": "^2.3.3",
     "expo": "~54.0.33",
     "expo-constants": "~18.0.13",
     "expo-font": "~14.0.11",
