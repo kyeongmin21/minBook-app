@@ -1,12 +1,11 @@
-import {Image} from "expo-image";
 import {StyleSheet, View, TextInput, FlatList, Text} from 'react-native';
+import Header from "@/components/Header";
 import {useState, useEffect} from 'react';
 import {searchBooks} from '@/api/books';
 import {BookItem} from "@/components/BookItem";
 import {useQuery, keepPreviousData} from '@tanstack/react-query';
 import {useWishlistStore} from '@/store/useWishlistStore';
 import {commonStyles} from "@/styles/commonStyles";
-
 
 
 export default function HomeScreen() {
@@ -30,27 +29,22 @@ export default function HomeScreen() {
 
     return (
         <View style={commonStyles.container}>
+            <Header />
             <FlatList data={data}
                       numColumns={2}
                       columnWrapperStyle={styles.columnWrapper}
                       contentContainerStyle={{flexGrow: 1}}
                       keyExtractor={(item, index) => item.isbn + index}
                       ListHeaderComponent={
-                          <View>
-                              <Image
-                                  source={require('@/assets/images/logo.png')}
-                                  style={commonStyles.logo}
-                              />
-                              <TextInput
-                                  style={styles.input}
-                                  placeholder={"검색어를 입력하세요"}
-                                  value={query}
-                                  onChangeText={setQuery}
-                              />
-                          </View>
+                          <TextInput
+                              style={styles.input}
+                              placeholder={"검색어를 입력하세요"}
+                              value={query}
+                              onChangeText={setQuery}
+                          />
                       }
 
-                      renderItem={({ item }) => (
+                      renderItem={({item}) => (
                           <BookItem
                               item={item}
                               isWished={wishlist.some(w => w.isbn === item.isbn)}
@@ -81,6 +75,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         marginLeft: 20,
         marginRight: 20,
+        marginTop: 20,
         borderRadius: 10,
         backgroundColor: '#f9f9f9',
     },

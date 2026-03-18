@@ -1,27 +1,27 @@
-import {Image} from "expo-image";
-import {FlatList, StyleSheet, View, Text} from 'react-native';
+import {FlatList, View, Text} from 'react-native';
 import {BookItem} from "@/components/BookItem";
 import {useWishlistStore} from "@/store/useWishlistStore";
 import {commonStyles} from "@/styles/commonStyles";
+import Header from "@/components/Header";
 
 
 export default function TabWishScreen() {
     const {wishlist, toggleWishlist} = useWishlistStore();
 
     return (
-        <View style={styles.container}>
-            <Image
-                source={require('@/assets/images/logo.png')}
-                style={styles.logo}
-            />
-
-            <Text style={{ textAlign: 'center' }}>북마크</Text>
+        <View style={commonStyles.container}>
+            <Header/>
             <FlatList
                 data={wishlist}
                 numColumns={2}
                 columnWrapperStyle={commonStyles.columnWrapper}
                 keyExtractor={(item) => item.isbn}
-                renderItem={({ item }) => (
+
+                ListHeaderComponent={
+                    <Text style={{textAlign: 'center', marginVertical: 10}}>북마크</Text>
+                }
+
+                renderItem={({item}) => (
                     <BookItem
                         item={item}
                         isWished={wishlist.some(w => w.isbn === item.isbn)}
@@ -34,15 +34,3 @@ export default function TabWishScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    logo: {
-        width: 100,
-        height: 100,
-        alignSelf: 'center',
-        marginTop: 15
-    },
-});

@@ -5,11 +5,28 @@ export const commonStyles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 90,
+        paddingHorizontal: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+        marginTop: 10,
+    },
+    headerSide: {
+        flex: 1, // 양쪽 사이드가 똑같은 공간을 차지함
+        justifyContent: 'center',
+    },
+    headerCenter: {
+        flex: 3, // 중앙은 좀 더 넓게 차지 (로고 크기에 따라 조절)
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     logo: {
         width: 100,
-        height: 100,
+        height: 80,
         alignSelf: 'center',
-        marginTop: 15
     },
     columnWrapper: {
         justifyContent: 'space-between',
