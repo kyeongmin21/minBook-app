@@ -1,7 +1,8 @@
-import {FlatList, View, Text, Pressable} from 'react-native';
+import {useEffect} from "react";
 import {useRouter} from 'expo-router';
 import {BookItem} from "@/components/BookItem";
 import Header from "@/components/Header";
+import {FlatList, View, Text, Pressable} from 'react-native';
 import {useAuthStore} from '@/store/authStore';
 import {commonStyles} from "@/styles/commonStyles";
 import {useWishlistStore} from "@/store/useWishlistStore";
@@ -9,9 +10,15 @@ import {wishlistStyles} from "@/styles/wishlistStyles";
 
 
 export default function TabWishScreen() {
-    const {wishlist, toggleWishlist} = useWishlistStore();
+    const {wishlist, toggleWishlist, fetchWishlist} = useWishlistStore();
     const {isLoggedIn} = useAuthStore();
     const router = useRouter();
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            fetchWishlist();
+        }
+    }, [isLoggedIn]);
 
     if (!isLoggedIn) {
         return (
@@ -42,7 +49,11 @@ export default function TabWishScreen() {
                         onToggle={toggleWishlist}
                     />
                 )}
-                ListEmptyComponent={<Text>찜한 도서가 없습니다.</Text>}
+                ListEmptyComponent={
+                    <View style={wishlistStyles.emptyContainer}>
+                        <Text style={wishlistStyles.emptyText}>찜한 도서가 없습니다.</Text>
+                    </View>
+                }
             />
         </View>
     );

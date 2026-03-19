@@ -1,24 +1,82 @@
 import {create} from 'zustand';
-import {persist, createJSONStorage} from 'zustand/middleware';
-import {Book, WishlistState} from '@/types/wishlist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {supabase} from '@/lib/supabase';
 
+interface Book {
+    isbn: string;
+    title: string;
+    thumbnail: string;
+    authors: string[];
+    price: number;
+    datetime: string;
+}
 
-export const useWishlistStore = create<WishlistState>()(
-    persist(
-        (set) => ({
-            wishlist: [],
-            toggleWishlist: (book: Book) => set((state) => {
-                const isExist = state.wishlist.some((item) => item.isbn === book.isbn);
-                if (isExist) {
-                    return {wishlist: state.wishlist.filter((item) => item.isbn !== book.isbn)};
-                }
-                return {wishlist: [...state.wishlist, book]};
-            }),
-        }),
-        {
-            name: 'book-wishlist-storage', // 저장소에 저장될 이름 (고유해야 함)
-            storage: createJSONStorage(() => AsyncStorage)
+interface WishlistStore {
+    wishlist: Book[];
+    fetchWishlist: () => Promise<void>;
+    toggleWishlist: (book: Book) => Promise<void>;
+}
+
+export const useWishlistStore = create<WishlistStore>((
+    set,
+    get
+) => ({
+    wishlist: [],
+
+    // 위시리스트 불러오기
+    fetchWishlist: async () => {
+        const {data: {user}} = await supabase.auth.getUser();
+        if (!user) return;
+
+        const {data} = await supabase
+            .from('wishlists')
+            .select('*')
+            .eq('user_id', user.id);
+
+        if (data) {
+            set({
+                wishlist: data.map(item => ({
+                    isbn: item.book_isbn,
+                    title: item.book_title,
+                    thumbnail: item.book_thumbnail,
+                    authors: item.book_authors ? item.book_authors.split(', ') : [],
+                    price: item.book_price ?? 0,
+                    datetime: item.book_datetime ?? '',
+                }))
+            });
         }
-    )
-);
+    },
+
+    // 찜하기/취소
+    toggleWishlist: async (book: Book) => {
+        const {data: {user}} = await supabase.auth.getUser();
+        if (!user) return;
+
+        const isWished = get().wishlist.some(w => w.isbn === book.isbn);
+
+        if (isWished) {
+            // 찜 취소
+            await supabase
+                .from('wishlists')
+                .delete()
+                .eq('user_id', user.id)
+                .eq('book_isbn', book.isbn);
+
+            set({wishlist: get().wishlist.filter(w => w.isbn !== book.isbn)});
+        } else {
+            // 찜 추가
+            await supabase
+                .from('wishlists')
+                .insert({
+                    user_id: user.id,
+                    book_isbn: book.isbn,
+                    book_title: book.title,
+                    book_thumbnail: book.thumbnail,
+                    book_authors: book.authors.join(', '),
+                    book_price: book.price,
+                    book_datetime: book.datetime,
+                });
+
+            set({wishlist: [...get().wishlist, book]});
+        }
+    },
+}));

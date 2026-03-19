@@ -20,4 +20,14 @@ export const wishlistStyles = StyleSheet.create({
         color: '#fff',
         fontWeight: '700',
     },
+    emptyContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 150,
+    },
+    emptyText: {
+        fontSize: 15,
+        color: '#999',
+    },
 });
