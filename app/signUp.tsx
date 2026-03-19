@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useRouter} from 'expo-router';
 import {supabase} from '@/lib/supabase';
 import {signUpStyles} from "@/styles/signUpStyles";
-import {View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity, Platform, Alert} from 'react-native';
+import {View, Text, TextInput, KeyboardAvoidingView, ScrollView, Pressable, Platform, Alert} from 'react-native';
 
 
 export default function SignupScreen() {
@@ -78,9 +78,9 @@ export default function SignupScreen() {
             <ScrollView contentContainerStyle={signUpStyles.inner} keyboardShouldPersistTaps="handled">
 
                 {/* 헤더 */}
-                <TouchableOpacity style={signUpStyles.backBtn} onPress={() => router.back()}>
+                <Pressable style={signUpStyles.backBtn} onPress={() => router.back()}>
                     <Text style={signUpStyles.backText}>← 돌아가기</Text>
-                </TouchableOpacity>
+                </Pressable>
 
                 <View style={signUpStyles.titleArea}>
                     <Text style={signUpStyles.title}>회원가입</Text>
@@ -137,12 +137,12 @@ export default function SignupScreen() {
                                 onChangeText={setPassword}
                                 secureTextEntry={!showPassword}  // 👈 변경
                             />
-                            <TouchableOpacity
+                            <Pressable
                                 onPress={() => setShowPassword(!showPassword)}
                                 style={signUpStyles.eyeBtn}
                             >
                                 <Text style={signUpStyles.eyeText}>{showPassword ? '🙊' : '🙈'}</Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
                     </View>
 
@@ -162,12 +162,12 @@ export default function SignupScreen() {
                                 onChangeText={setPasswordConfirm}
                                 secureTextEntry={!showPasswordConfirm}
                             />
-                            <TouchableOpacity
+                            <Pressable
                                 onPress={() => setShowPasswordConfirm(!showPasswordConfirm)}
                                 style={signUpStyles.eyeBtn}
                             >
                                 <Text style={signUpStyles.eyeText}>{showPasswordConfirm ? '🙊' : '🙈️️'}</Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         </View>
                         {passwordConfirm.length > 0 && (
                             <Text style={{
@@ -180,7 +180,7 @@ export default function SignupScreen() {
                     </View>
 
                     {/* 가입 버튼 */}
-                    <TouchableOpacity
+                    <Pressable
                         style={[signUpStyles.signupBtn, loading && signUpStyles.btnDisabled]}
                         onPress={handleSignup}
                         disabled={loading}
@@ -188,17 +188,17 @@ export default function SignupScreen() {
                         <Text style={signUpStyles.signupBtnText}>
                             {loading ? '가입 중...' : '회원가입'}
                         </Text>
-                    </TouchableOpacity>
+                    </Pressable>
 
                     {/* 로그인으로 */}
-                    <TouchableOpacity
+                    <Pressable
                         style={signUpStyles.loginLink}
                         onPress={() => router.replace('/login')}
                     >
                         <Text style={signUpStyles.loginLinkText}>
                             이미 계정이 있어요. <Text style={{fontWeight: '700', color: '#1a1a1a'}}>로그인</Text>
                         </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>

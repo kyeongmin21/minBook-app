@@ -2,7 +2,7 @@ import {useState, useCallback} from 'react';
 import {useRouter, useFocusEffect} from 'expo-router';
 import {supabase} from '@/lib/supabase';
 import {loginStyles} from '@/styles/loginStyles'
-import {View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, Platform, Alert} from 'react-native';
+import {View, Text, TextInput, KeyboardAvoidingView, Pressable, Platform, Alert} from 'react-native';
 
 
 export default function LoginScreen() {
@@ -80,7 +80,7 @@ export default function LoginScreen() {
                 />
 
                 {/* 로그인 버튼 */}
-                <TouchableOpacity
+                <Pressable
                     style={[loginStyles.loginBtn, loading && loginStyles.loginBtnDisabled]}
                     onPress={handleLogin}
                     disabled={loading}
@@ -88,21 +88,21 @@ export default function LoginScreen() {
                     <Text style={loginStyles.loginBtnText}>
                         {loading ? '로그인 중...' : '로그인'}
                     </Text>
-                </TouchableOpacity>
+                </Pressable>
 
                 {/* 하단 링크 */}
                 <View style={loginStyles.links}>
-                    <TouchableOpacity onPress={() => Alert.alert('준비 중', '아이디/비밀번호 찾기')}>
+                    <Pressable onPress={() => Alert.alert('준비 중', '아이디/비밀번호 찾기')}>
                         <Text style={loginStyles.linkText}>아이디 찾기</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                     <Text style={loginStyles.divider}>|</Text>
-                    <TouchableOpacity onPress={() => Alert.alert('준비 중', '비밀번호 찾기')}>
+                    <Pressable onPress={() => Alert.alert('준비 중', '비밀번호 찾기')}>
                         <Text style={loginStyles.linkText}>비밀번호 찾기</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                     <Text style={loginStyles.divider}>|</Text>
-                    <TouchableOpacity onPress={() => router.push('/signUp')}>
+                    <Pressable onPress={() => router.push('/signUp')}>
                         <Text style={[loginStyles.linkText, loginStyles.signupText]}>회원가입</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             </View>
         </KeyboardAvoidingView>

@@ -1,9 +1,9 @@
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import {useRouter} from 'expo-router';
+import {View, Text, Pressable, Alert} from 'react-native';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {useAuthStore} from '@/store/authStore';
 import {supabase} from '@/lib/supabase';
-import {useRouter} from 'expo-router';
-
+import {menuBarStyles} from "@/styles/menuBarStyle";
 
 export default function MenuBar(props: any) {
     const router = useRouter();
@@ -20,61 +20,39 @@ export default function MenuBar(props: any) {
 
     return (
         <DrawerContentScrollView {...props}>
-            <View style={styles.container}>
+            <View style={menuBarStyles.container}>
 
                 {/* 유저 정보 */}
                 {isLoggedIn ? (
-                    <View style={styles.userArea}>
-                        <Text style={styles.nickname}>{user?.nickname}님</Text>
-                        <Text style={styles.email}>{user?.email}</Text>
+                    <View style={menuBarStyles.userArea}>
+                        <Text style={menuBarStyles.nickname}>{user?.nickname}님</Text>
+                        <Text style={menuBarStyles.email}>{user?.email}</Text>
                     </View>
                 ) : (
-                    <TouchableOpacity
-                        style={styles.loginBtn}
-                        onPress={() => router.push('/login')}
-                    >
-                        <Text style={styles.loginBtnText}>로그인 / 회원가입</Text>
-                    </TouchableOpacity>
+                    <Pressable
+                        style={menuBarStyles.loginBtn}
+                        onPress={() => router.push('/login')}>
+                        <Text style={menuBarStyles.loginBtnText}>로그인 / 회원가입</Text>
+                    </Pressable>
                 )}
 
-                <View style={styles.divider}/>
+                <View style={menuBarStyles.divider}/>
 
                 {/* 메뉴 */}
-                <TouchableOpacity
-                    style={styles.menuItem}
-                    onPress={() => router.push('/(tabs)')}
-                >
-                    <Text style={styles.menuText}>🏠 홈</Text>
-                </TouchableOpacity>
+                <Pressable
+                    style={menuBarStyles.menuItem}
+                    onPress={() => router.push('/(tabs)')}>
+                    <Text style={menuBarStyles.menuText}>🏠 홈</Text>
+                </Pressable>
 
                 {/* 로그아웃 (로그인 상태일 때만) */}
                 {isLoggedIn && (
-                    <TouchableOpacity
-                        style={styles.menuItem}
-                        onPress={handleLogout}
-                    >
-                        <Text style={[styles.menuText, {color: '#FF5252'}]}>로그아웃</Text>
-                    </TouchableOpacity>
+                    <Pressable style={menuBarStyles.menuItem} onPress={handleLogout}>
+                        <Text style={[menuBarStyles.menuText, {color: '#FF5252'}]}>로그아웃</Text>
+                    </Pressable>
                 )}
             </View>
         </DrawerContentScrollView>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {flex: 1, padding: 20},
-    userArea: {paddingVertical: 20},
-    nickname: {fontSize: 18, fontWeight: '700', color: '#1a1a1a'},
-    email: {fontSize: 13, color: '#999', marginTop: 4},
-    loginBtn: {
-        backgroundColor: '#1a1a1a',
-        borderRadius: 10,
-        padding: 14,
-        alignItems: 'center',
-        marginVertical: 20,
-    },
-    loginBtnText: {color: '#fff', fontWeight: '700'},
-    divider: {height: 1, backgroundColor: '#eee', marginVertical: 16},
-    menuItem: {paddingVertical: 14},
-    menuText: {fontSize: 15, color: '#333'},
-});
