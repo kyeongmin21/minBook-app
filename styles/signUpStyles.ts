@@ -55,7 +55,7 @@ export const signUpStyles = StyleSheet.create({
         borderRadius: 12,
         paddingVertical: 16,
         alignItems: 'center',
-        marginTop: 4,
+        marginTop: 10,
     },
     btnDisabled: {
         backgroundColor: '#999',
@@ -72,5 +72,26 @@ export const signUpStyles = StyleSheet.create({
     loginLinkText: {
         fontSize: 14,
         color: '#888',
+    },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#E8E8E8',
+        borderRadius: 12,
+        paddingHorizontal: 16,
+    },
+    inputFlex: {
+        flex: 1,
+        paddingVertical: 14,
+        fontSize: 15,
+        color: '#1a1a1a',
+    },
+    eyeBtn: {
+        paddingLeft: 8,
+    },
+    eyeText: {
+        fontSize: 18,
     },
 });

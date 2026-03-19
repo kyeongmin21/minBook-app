@@ -22,7 +22,7 @@ export const supabase = createClient(
         auth: {
             storage: storage, // 웹이면 undefined가 되어 에러를 피함
             autoRefreshToken: true,
-            persistSession: true,
+            persistSession: true,  // ← 로그인 성공하면 세션 자동으로 저장하겠다!
             detectSessionInUrl: false,
         },
     });

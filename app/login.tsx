@@ -1,5 +1,6 @@
-import {useState} from 'react';
-import {useRouter} from 'expo-router';
+import {useState, useCallback} from 'react';
+import {useRouter, useFocusEffect} from 'expo-router';
+import {supabase} from '@/lib/supabase';
 import {loginStyles} from '@/styles/loginStyles'
 import {View, Text, TextInput, KeyboardAvoidingView, TouchableOpacity, Platform, Alert} from 'react-native';
 
@@ -12,14 +13,40 @@ export default function LoginScreen() {
 
     const handleLogin = async () => {
         if (!email || !password) {
-            console.log('들어오냥')
             Alert.alert('알림', '이메일과 비밀번호를 입력해주세요.');
             return;
         }
         setLoading(true);
-        // TODO: supabase 로그인 연결 예정
+
+        const {error} = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
         setLoading(false);
+
+        if (error) {
+            if (error.message.includes('Invalid login credentials')) {
+                Alert.alert('오류', '이메일 또는 비밀번호가 틀렸어요.');
+            } else if (error.message.includes('Too Many Requests')) {
+                Alert.alert('잠깐!', '잠시 후 다시 시도해주세요.');
+            } else {
+                Alert.alert('오류', error.message);
+            }
+            return;
+        }
+
+        router.replace('/');
     };
+
+
+    useFocusEffect(
+        useCallback(() => {
+            // 페이지 들어올 때마다 초기화
+            setEmail('');
+            setPassword('');
+        }, [])
+    );
 
     return (
         <KeyboardAvoidingView

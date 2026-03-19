@@ -1,8 +1,8 @@
 import {useState} from 'react';
 import {useRouter} from 'expo-router';
-import {View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity, Platform, Alert} from 'react-native';
 import {supabase} from '@/lib/supabase';
 import {signUpStyles} from "@/styles/signUpStyles";
+import {View, Text, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity, Platform, Alert} from 'react-native';
 
 
 export default function SignupScreen() {
@@ -13,6 +13,9 @@ export default function SignupScreen() {
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+
 
     const handleSignup = async () => {
         if (!name || !nickname || !email || !password || !passwordConfirm) {
@@ -29,21 +32,40 @@ export default function SignupScreen() {
         }
 
         setLoading(true);
-        const {error} = await supabase.auth.signUp({
+
+        // 1. 회원가입
+        const {data, error} = await supabase.auth.signUp({
             email,
             password,
             options: {
-                data: {nickname}, // 닉네임 메타데이터로 저장
+                data: {name, nickname},
             },
         });
-        setLoading(false);
 
         if (error) {
             Alert.alert('오류', error.message);
+            setLoading(false);
             return;
         }
 
-        Alert.alert('가입 완료! 🎉', '이메일 인증 후 로그인해주세요.', [
+        // 2. profiles 테이블에도 저장
+        const {error: profileError} = await supabase
+            .from('profiles')
+            .insert({
+                id: data.user?.id,
+                email,
+                name,
+                nickname,
+            });
+
+        setLoading(false);
+
+        if (profileError) {
+            Alert.alert('오류', profileError.message);
+            return;
+        }
+
+        Alert.alert('가입 완료!', '로그인해주세요.', [
             {text: '확인', onPress: () => router.replace('/login')},
         ]);
     };
@@ -62,7 +84,7 @@ export default function SignupScreen() {
 
                 <View style={signUpStyles.titleArea}>
                     <Text style={signUpStyles.title}>회원가입</Text>
-                    <Text style={signUpStyles.subtitle}>민북과 함께 독서를 기록해요</Text>
+                    <Text style={signUpStyles.subtitle}>minBook과 함께 독서를 기록해요.</Text>
                 </View>
 
                 {/* 입력 폼 */}
@@ -73,7 +95,7 @@ export default function SignupScreen() {
                             style={signUpStyles.input}
                             placeholder="이름"
                             placeholderTextColor="#aaa"
-                            value={nickname}
+                            value={name}
                             onChangeText={setName}
                             autoCapitalize="none"
                         />
@@ -106,31 +128,47 @@ export default function SignupScreen() {
 
                     <View>
                         <Text style={signUpStyles.label}>비밀번호</Text>
-                        <TextInput
-                            style={signUpStyles.input}
-                            placeholder="6자 이상"
-                            placeholderTextColor="#aaa"
-                            value={password}
-                            onChangeText={setPassword}
-                            secureTextEntry
-                        />
+                        <View style={signUpStyles.inputWrapper}>
+                            <TextInput
+                                style={signUpStyles.inputFlex}
+                                placeholder="6자 이상"
+                                placeholderTextColor="#aaa"
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry={!showPassword}  // 👈 변경
+                            />
+                            <TouchableOpacity
+                                onPress={() => setShowPassword(!showPassword)}
+                                style={signUpStyles.eyeBtn}
+                            >
+                                <Text style={signUpStyles.eyeText}>{showPassword ? '🙊' : '🙈'}</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     <View>
                         <Text style={signUpStyles.label}>비밀번호 확인</Text>
-                        <TextInput
-                            style={[
-                                signUpStyles.input,
-                                passwordConfirm.length > 0 && {
-                                    borderColor: password === passwordConfirm ? '#4CAF50' : '#FF5252',
-                                },
-                            ]}
-                            placeholder="비밀번호 재입력"
-                            placeholderTextColor="#aaa"
-                            value={passwordConfirm}
-                            onChangeText={setPasswordConfirm}
-                            secureTextEntry
-                        />
+                        <View style={[
+                            signUpStyles.inputWrapper,
+                            passwordConfirm.length > 0 && {
+                                borderColor: password === passwordConfirm ? '#4CAF50' : '#FF5252',
+                            },
+                        ]}>
+                            <TextInput
+                                style={signUpStyles.inputFlex}
+                                placeholder="비밀번호 재입력"
+                                placeholderTextColor="#aaa"
+                                value={passwordConfirm}
+                                onChangeText={setPasswordConfirm}
+                                secureTextEntry={!showPasswordConfirm}
+                            />
+                            <TouchableOpacity
+                                onPress={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                                style={signUpStyles.eyeBtn}
+                            >
+                                <Text style={signUpStyles.eyeText}>{showPasswordConfirm ? '🙊' : '🙈️️'}</Text>
+                            </TouchableOpacity>
+                        </View>
                         {passwordConfirm.length > 0 && (
                             <Text style={{
                                 fontSize: 12, marginTop: 4,
