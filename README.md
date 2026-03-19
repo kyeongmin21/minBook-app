@@ -54,7 +54,7 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
 <p align="center">
   <img src="./assets/images/appImg01.jpg" width="32%">
   <img src="./assets/images/appImg05.jpg" width="32%">
-  <br>
+  <br><br>
   <img src="./assets/images/appImg03.jpg" width="32%">
   <img src="./assets/images/appImg02.jpg" width="32%">
   <img src="./assets/images/appImg04.jpg" width="32%">
