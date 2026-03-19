@@ -30,6 +30,7 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
 - Zustand (상태 관리)
 - AsyncStorage (로컬 데이터 저장)
 - Kakao Book Search API ([링크](https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book) , REST API 키)
+- Supabase
 
 <br/><br/>
 
