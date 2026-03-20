@@ -1,7 +1,7 @@
 import {useEffect} from "react";
-import {useRouter} from 'expo-router';
 import {BookItem} from "@/components/BookItem";
 import Header from "@/components/Header";
+import {router} from 'expo-router';
 import {FlatList, View, Text, Pressable} from 'react-native';
 import {useAuthStore} from '@/store/authStore';
 import {commonStyles} from "@/styles/commonStyles";
@@ -12,7 +12,7 @@ import {wishlistStyles} from "@/styles/wishlistStyles";
 export default function TabWishScreen() {
     const {wishlist, toggleWishlist, fetchWishlist} = useWishlistStore();
     const {isLoggedIn} = useAuthStore();
-    const router = useRouter();
+
 
     useEffect(() => {
         if (isLoggedIn) {
