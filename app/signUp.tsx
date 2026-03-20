@@ -6,7 +6,6 @@ import {signUpStyles} from "@/styles/signUpStyles";
 import {View, Text, TextInput, KeyboardAvoidingView, ScrollView, Pressable, Platform, Alert} from 'react-native';
 
 
-
 export default function SignupScreen() {
     const router = useRouter();
     const [email, setEmail] = useState('');

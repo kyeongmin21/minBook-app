@@ -4,9 +4,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Book} from '@/types/book';
 
 
+export interface ReadBook {
+    book: Book;
+    readAt: string;
+    rating: number;
+    review: string;
+}
+
 interface ReadStore {
-    readList: Book[];
+    readList: ReadBook[];
     toggleRead: (book: Book) => void;
+    updateReview: (isbn: string, rating: number, review: string, readAt: string) => void;
 }
 
 export const useReadStore = create<ReadStore>()(
@@ -14,11 +22,23 @@ export const useReadStore = create<ReadStore>()(
         (set, get) => ({
             readList: [],
             toggleRead: (book) => {
-                const exists = get().readList.some(r => r.isbn === book.isbn);
+                const exists = get().readList.some(r => r.book.isbn === book.isbn);
                 set({
                     readList: exists
-                        ? get().readList.filter(r => r.isbn !== book.isbn)
-                        : [...get().readList, book],
+                        ? get().readList.filter(r => r.book.isbn !== book.isbn)
+                        : [...get().readList, {
+                            book,
+                            readAt: new Date().toISOString().split('T')[0],
+                            rating: 0,
+                            review: '',
+                        }],
+                });
+            },
+            updateReview: (isbn, rating, review, readAt) => {
+                set({
+                    readList: get().readList.map(r =>
+                        r.book.isbn === isbn ? {...r, rating, review, readAt} : r
+                    ),
                 });
             },
         }),

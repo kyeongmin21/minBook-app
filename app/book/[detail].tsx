@@ -17,7 +17,7 @@ export default function BookDetailScreen() {
 
     if (!book) return null;
 
-    const isRead = readList.some(r => r.isbn === book.isbn);
+    const isRead = readList.some(r => r.book.isbn === book.isbn);
     const isWished = wishlist.some(w => w.isbn === book.isbn);
 
     return (

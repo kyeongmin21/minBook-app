@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import {router} from "expo-router";
 import {supabase} from '@/lib/supabase';
 import {useAuthStore} from '@/store/authStore';
 import {signUpStyles} from "@/styles/signUpStyles";
@@ -79,12 +80,14 @@ export default function MyPageScreen() {
             <ScrollView contentContainerStyle={signUpStyles.inner} keyboardShouldPersistTaps="handled">
 
                 <View style={signUpStyles.titleArea}>
+                    <Pressable style={signUpStyles.backBtn} onPress={() => router.back()}>
+                        <Text style={signUpStyles.backText}>← 돌아가기</Text>
+                    </Pressable>
                     <Text style={signUpStyles.title}>마이페이지</Text>
                     <Text style={signUpStyles.subtitle}>내 정보를 수정해요.</Text>
                 </View>
 
                 <View style={signUpStyles.form}>
-
                     {/* 이름 - 읽기전용 */}
                     <View>
                         <Text style={signUpStyles.label}>이름</Text>
