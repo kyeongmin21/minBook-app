@@ -1,14 +1,7 @@
 import {create} from 'zustand';
 import {supabase} from '@/lib/supabase';
+import {Book} from "@/types/book";
 
-interface Book {
-    isbn: string;
-    title: string;
-    thumbnail: string;
-    authors: string[];
-    price: number;
-    datetime: string;
-}
 
 interface WishlistStore {
     wishlist: Book[];
@@ -41,6 +34,8 @@ export const useWishlistStore = create<WishlistStore>((
                     authors: item.book_authors ? item.book_authors.split(', ') : [],
                     price: item.book_price ?? 0,
                     datetime: item.book_datetime ?? '',
+                    contents: item.book_contents ?? '',
+                    publisher: item.book_publisher ?? '',
                 }))
             });
         }
