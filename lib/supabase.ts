@@ -8,12 +8,26 @@ const ExpoSecureStoreAdapter = {
     removeItem: (key: string) => SecureStore.deleteItemAsync(key),
 };
 
+
+// 웹이면 localStorage, 앱이면 SecureStore
+const storage = Platform.OS === 'web' ? {
+    getItem: (key: string) => {
+        if (typeof window === 'undefined') return Promise.resolve(null); // ← SSR 방어
+        return Promise.resolve(localStorage.getItem(key));
+    },
+    setItem: (key: string, value: string) => {
+        if (typeof window === 'undefined') return Promise.resolve();  // ← SSR 방어
+        return Promise.resolve(localStorage.setItem(key, value));
+    },
+    removeItem: (key: string) => {
+        if (typeof window === 'undefined') return Promise.resolve();  // ← SSR 방어
+        return Promise.resolve(localStorage.removeItem(key));
+    },
+} : ExpoSecureStoreAdapter;
+
+
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
-
-
-// 웹 환경일 때는 기본 localStorage를 쓰거나 처리를 건너뛰어야 함
-const storage = Platform.OS === 'web' ? undefined : ExpoSecureStoreAdapter;
 
 
 export const supabase = createClient(

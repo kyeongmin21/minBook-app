@@ -14,8 +14,18 @@ export default function RootLayout() {
     const queryClient = new QueryClient();
 
     useEffect(() => {
+        // 기존 세션 복원 ← 이게 있어야 새로고침해도 유지
+        supabase.auth.getSession().then(({data: {session}}) => {
+            if (session) {
+                useAuthStore.getState().fetchUser();
+            }
+        });
+
         const {data: {subscription}} = supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
+                useAuthStore.getState().fetchUser();
+            }
+            if (event === 'INITIAL_SESSION' && session) {
                 useAuthStore.getState().fetchUser();
             }
         });
