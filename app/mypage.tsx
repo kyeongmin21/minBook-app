@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {router} from "expo-router";
+import {router} from 'expo-router';
 import {supabase} from '@/lib/supabase';
 import {useAuthStore} from '@/store/authStore';
-import {signUpStyles} from "@/styles/signUpStyles";
+import {signUpStyles} from '@/styles/signUpStyles';
 import {View, Text, TextInput, KeyboardAvoidingView, ScrollView, Pressable, Platform, Alert} from 'react-native';
 
 
@@ -77,7 +77,7 @@ export default function MyPageScreen() {
             style={signUpStyles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-            <ScrollView contentContainerStyle={signUpStyles.inner} keyboardShouldPersistTaps="handled">
+            <ScrollView contentContainerStyle={signUpStyles.inner} keyboardShouldPersistTaps='handled'>
 
                 <View style={signUpStyles.titleArea}>
                     <Pressable style={signUpStyles.backBtn} onPress={() => router.back()}>
@@ -113,11 +113,11 @@ export default function MyPageScreen() {
                         <Text style={signUpStyles.label}>닉네임</Text>
                         <TextInput
                             style={signUpStyles.input}
-                            placeholder="닉네임"
-                            placeholderTextColor="#aaa"
+                            placeholder='닉네임'
+                            placeholderTextColor='#aaa'
                             value={nickname}
                             onChangeText={setNickname}
-                            autoCapitalize="none"
+                            autoCapitalize='none'
                         />
                     </View>
 
@@ -127,17 +127,17 @@ export default function MyPageScreen() {
                         <View style={signUpStyles.inputWrapper}>
                             <TextInput
                                 style={signUpStyles.inputFlex}
-                                placeholder="6자 이상"
-                                placeholderTextColor="#aaa"
+                                placeholder='6자 이상'
+                                placeholderTextColor='#aaa'
                                 value={password}
                                 onChangeText={setPassword}
                                 secureTextEntry={!showPassword}
                             />
                             <Pressable onPress={() => setShowPassword(!showPassword)} style={signUpStyles.eyeBtn}>
                                 <Ionicons
-                                    name={showPassword ? "lock-open-outline" : "lock-closed-outline"}
+                                    name={showPassword ? 'lock-open-outline' : 'lock-closed-outline'}
                                     size={20}
-                                    color="#aaa"
+                                    color='#aaa'
                                 />
                             </Pressable>
                         </View>
@@ -153,17 +153,17 @@ export default function MyPageScreen() {
                         ]}>
                             <TextInput
                                 style={signUpStyles.inputFlex}
-                                placeholder="비밀번호 재입력"
-                                placeholderTextColor="#aaa"
+                                placeholder='비밀번호 재입력'
+                                placeholderTextColor='#aaa'
                                 value={passwordConfirm}
                                 onChangeText={setPasswordConfirm}
                                 secureTextEntry={!showPasswordConfirm}
                             />
                             <Pressable onPress={() => setShowPasswordConfirm(!showPasswordConfirm)} style={signUpStyles.eyeBtn}>
                                 <Ionicons
-                                    name={showPasswordConfirm ? "lock-open-outline" : "lock-closed-outline"}
+                                    name={showPasswordConfirm ? 'lock-open-outline' : 'lock-closed-outline'}
                                     size={20}
-                                    color="#aaa"
+                                    color='#aaa'
                                 />
                             </Pressable>
                         </View>

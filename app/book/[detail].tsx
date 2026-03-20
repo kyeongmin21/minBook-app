@@ -3,9 +3,9 @@ import {Ionicons} from '@expo/vector-icons';
 import {View, Text, ScrollView, Pressable} from 'react-native';
 import {router} from 'expo-router';
 import {useWishlistStore} from '@/store/useWishlistStore';
-import {detailStyles} from "@/styles/detailStyles";
-import {useReadStore} from "@/store/readStore";
-import {useBookStore} from "@/store/useBookStore";
+import {detailStyles} from '@/styles/detailStyles';
+import {useReadStore} from '@/store/readStore';
+import {useBookStore} from '@/store/useBookStore';
 
 
 export default function BookDetailScreen() {
@@ -25,12 +25,12 @@ export default function BookDetailScreen() {
 
             {/* 뒤로가기 */}
             <Pressable style={detailStyles.backBtn} onPress={() => router.back()}>
-                <Ionicons name="arrow-back" size={24} color="#1a1a1a"/>
+                <Ionicons name='arrow-back' size={24} color='#1a1a1a'/>
             </Pressable>
 
             {/* 책 표지 */}
             <View style={detailStyles.thumbnailArea}>
-                <Image source={{uri: book.thumbnail}} style={detailStyles.thumbnail} contentFit="cover"/>
+                <Image source={{uri: book.thumbnail}} style={detailStyles.thumbnail} contentFit='cover'/>
             </View>
 
             {/* 책 정보 */}
@@ -51,9 +51,9 @@ export default function BookDetailScreen() {
                     onPress={() => toggleWishlist(book)}
                 >
                     <Ionicons
-                        name={isWished ? "heart" : "heart-outline"}
+                        name={isWished ? 'heart' : 'heart-outline'}
                         size={20}
-                        color={isWished ? "#ff3e3e" : "#1a1a1a"}
+                        color={isWished ? '#ff3e3e' : '#1a1a1a'}
                     />
                     <Text style={detailStyles.btnText}>{isWished ? '찜 취소' : '찜하기'}</Text>
                 </Pressable>
@@ -63,7 +63,7 @@ export default function BookDetailScreen() {
                     onPress={() => toggleRead(book)}
                     style={[detailStyles.btn, detailStyles.readBtn]}
                 >
-                    <Ionicons name={isRead ? "book-outline" : "book"} size={20} color="#fff"/>
+                    <Ionicons name={isRead ? 'book-outline' : 'book'} size={20} color='#fff'/>
                     <Text style={[detailStyles.btnText, {color: '#fff'}]}>
                         {isRead ? '읽기 취소' : '읽었어요'}
                     </Text>
