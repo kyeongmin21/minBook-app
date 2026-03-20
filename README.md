@@ -27,10 +27,10 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
 
 - React Native
 - Expo
-- Zustand (상태 관리)
-- AsyncStorage (로컬 데이터 저장)
-- Kakao Book Search API ([링크](https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book) , REST API 키)
+- TypeScript
+- Zustand
 - Supabase
+- Kakao Book Search API ([링크](https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book) , REST API 키)
 
 <br/><br/>
 
@@ -53,9 +53,9 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
 ## App Image
 <p align="center">
   <img src="./assets/images/appImg01.jpg" width="32%">
-  <img src="./assets/images/appImg05.jpg" width="32%">
+  <img src="./assets/images/appImg02.jpg" width="32%">
   <br><br>
   <img src="./assets/images/appImg03.jpg" width="32%">
-  <img src="./assets/images/appImg02.jpg" width="32%">
   <img src="./assets/images/appImg04.jpg" width="32%">
+  <img src="./assets/images/appImg05.jpg" width="32%">
 </p>
