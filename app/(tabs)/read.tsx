@@ -1,14 +1,17 @@
 import {View, Text, FlatList, Modal, TextInput, Pressable} from 'react-native';
 import {Image} from 'expo-image';
-import {useState} from 'react';
-import {Ionicons} from '@expo/vector-icons';
-import Header from '@/components/Header';
 import {useReadStore, ReadBook} from '@/store/readStore';
 import {readStyles} from '@/styles/readStyles';
+import {useAuthStore} from '@/store/authStore';
+import {useState, useEffect} from 'react';
+import {Ionicons} from '@expo/vector-icons';
+import Header from '@/components/Header';
+import LoginRequired from '@/components/LoginRequired';
 
 
 export default function TabReadScreen() {
-    const {readList, updateReview} = useReadStore();
+    const {isLoggedIn} = useAuthStore();
+    const {readList, updateReview, fetchReadList} = useReadStore();
     const [selected, setSelected] = useState<ReadBook | null>(null);
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
@@ -23,11 +26,21 @@ export default function TabReadScreen() {
 
     const closeModal = () => setSelected(null);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!selected) return;
-        updateReview(selected.book.isbn, rating, review, readAt);
+        await updateReview(selected.book.isbn, rating, review, readAt);
         closeModal();
     };
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            fetchReadList();
+        }
+    }, [isLoggedIn]);
+
+    if (!isLoggedIn) {
+        return <LoginRequired />;
+    }
 
     return (
         <View style={readStyles.container}>
