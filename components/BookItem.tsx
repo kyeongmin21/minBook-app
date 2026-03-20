@@ -4,6 +4,7 @@ import {View, Text, Pressable} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import {router} from "expo-router";
 import {commonStyles} from "@/styles/commonStyles";
+import {useBookStore} from '@/store/useBookStore';
 
 
 interface BookItemProps {
@@ -13,22 +14,15 @@ interface BookItemProps {
 }
 
 export const BookItem = ({item, isWished, onToggle}: BookItemProps) => {
+    const {setSelectedBook} = useBookStore();
+
     return (
         <Pressable
             style={commonStyles.itemContainer}
-            onPress={() => router.push({
-                pathname: '/book/[detail]',
-                params: {
-                    detail: item.isbn,
-                    title: item.title,
-                    thumbnail: item.thumbnail,
-                    authors: JSON.stringify(item.authors),
-                    price: item.price,
-                    datetime: item.datetime,
-                    contents: item.contents,
-                    publisher: item.publisher,
-                }
-            })}
+            onPress={() => {
+                setSelectedBook(item);
+                router.push(`/book/${item.isbn}`);
+            }}
         >
             <View>
                 <Image source={{uri: item.thumbnail}} style={commonStyles.thumbnail} contentFit="cover"/>
