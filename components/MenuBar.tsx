@@ -4,6 +4,7 @@ import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {useAuthStore} from '@/store/authStore';
 import {supabase} from '@/lib/supabase';
 import {menuBarStyles} from "@/styles/menuBarStyle";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function MenuBar(props: any) {
     const router = useRouter();
@@ -39,11 +40,39 @@ export default function MenuBar(props: any) {
                 <View style={menuBarStyles.divider}/>
 
                 {/* 메뉴 */}
-                <Pressable
-                    style={menuBarStyles.menuItem}
-                    onPress={() => router.push('/(tabs)')}>
-                    <Text style={menuBarStyles.menuText}>🏠 홈</Text>
-                </Pressable>
+                <View style={menuBarStyles.menuList}>
+                    <Pressable
+                        style={menuBarStyles.menuItem}
+                        onPress={() => { props.navigation.closeDrawer(); router.push('/(tabs)'); }}
+                    >
+                        <Ionicons name="home-outline" size={20} color="#333" />
+                        <Text style={menuBarStyles.menuText}>홈</Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={menuBarStyles.menuItem}
+                        onPress={() => { props.navigation.closeDrawer(); router.push('/(tabs)/wishlist'); }}
+                    >
+                        <Ionicons name="bookmark-outline" size={20} color="#333" />
+                        <Text style={menuBarStyles.menuText}>북마크</Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={menuBarStyles.menuItem}
+                        onPress={() => { props.navigation.closeDrawer(); router.push('/(tabs)/read'); }}
+                    >
+                        <Ionicons name="book-outline" size={20} color="#333" />
+                        <Text style={menuBarStyles.menuText}>읽은 책</Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={menuBarStyles.menuItem}
+                        onPress={() => { props.navigation.closeDrawer(); router.push('/mypage'); }}
+                    >
+                        <Ionicons name="person-outline" size={20} color="#333" />
+                        <Text style={menuBarStyles.menuText}>마이페이지</Text>
+                    </Pressable>
+                </View>
 
                 {/* 로그아웃 (로그인 상태일 때만) */}
                 {isLoggedIn && (

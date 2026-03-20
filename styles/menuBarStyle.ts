@@ -33,11 +33,19 @@ export const menuBarStyles = StyleSheet.create({
         backgroundColor: '#eee',
         marginVertical: 16
     },
+    menuList: {
+        gap: 4,
+    },
     menuItem: {
-        paddingVertical: 14
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        paddingVertical: 14,
+
+        borderRadius: 10,
     },
     menuText: {
         fontSize: 15,
-        color: '#333'
+        color: '#333',
     },
 });
