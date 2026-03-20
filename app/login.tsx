@@ -1,8 +1,10 @@
 import {useState, useCallback} from 'react';
 import {useRouter, useFocusEffect} from 'expo-router';
+import Ionicons from "@expo/vector-icons/Ionicons";
 import {supabase} from '@/lib/supabase';
 import {loginStyles} from '@/styles/loginStyles'
 import {View, Text, TextInput, KeyboardAvoidingView, Pressable, Platform, Alert} from 'react-native';
+
 
 
 export default function LoginScreen() {
@@ -10,6 +12,8 @@ export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -70,14 +74,26 @@ export default function LoginScreen() {
                     keyboardType="email-address"
                     autoCapitalize="none"
                 />
-                <TextInput
-                    style={loginStyles.input}
-                    placeholder="비밀번호"
-                    placeholderTextColor="#aaa"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                />
+                <View style={loginStyles.passwordWrapper}>
+                    <TextInput
+                        style={loginStyles.passwordInput}
+                        placeholder="비밀번호"
+                        placeholderTextColor="#aaa"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry={!showPasswordConfirm}
+                    />
+                    <Pressable
+                        onPress={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                        style={loginStyles.eyeBtn}
+                    >
+                        <Ionicons
+                            name={showPasswordConfirm ? "lock-open-outline" : "lock-closed-outline"}
+                            size={20}
+                            color="#aaa"
+                        />
+                    </Pressable>
+                </View>
 
                 {/* 로그인 버튼 */}
                 <Pressable

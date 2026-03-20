@@ -70,4 +70,25 @@ export const loginStyles = StyleSheet.create({
         color: '#1a1a1a',
         fontWeight: '600',
     },
+    passwordWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#E8E8E8',
+        borderRadius: 12,
+        paddingHorizontal: 16,
+    },
+    passwordInput: {
+        flex: 1,
+        paddingVertical: 14,
+        fontSize: 15,
+        color: '#1a1a1a',
+    },
+    eyeBtn: {
+        paddingLeft: 8,
+    },
+    eyeText: {
+        fontSize: 18,
+    },
 });

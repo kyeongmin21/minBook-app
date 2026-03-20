@@ -1,8 +1,10 @@
 import {useState} from 'react';
 import {useRouter} from 'expo-router';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import {supabase} from '@/lib/supabase';
 import {signUpStyles} from "@/styles/signUpStyles";
 import {View, Text, TextInput, KeyboardAvoidingView, ScrollView, Pressable, Platform, Alert} from 'react-native';
+
 
 
 export default function SignupScreen() {
@@ -135,13 +137,17 @@ export default function SignupScreen() {
                                 placeholderTextColor="#aaa"
                                 value={password}
                                 onChangeText={setPassword}
-                                secureTextEntry={!showPassword}  // 👈 변경
+                                secureTextEntry={!showPassword}
                             />
                             <Pressable
                                 onPress={() => setShowPassword(!showPassword)}
                                 style={signUpStyles.eyeBtn}
                             >
-                                <Text style={signUpStyles.eyeText}>{showPassword ? '🙊' : '🙈'}</Text>
+                                <Ionicons
+                                    name={showPassword ? "lock-open-outline" : "lock-closed-outline"}
+                                    size={20}
+                                    color="#aaa"
+                                />
                             </Pressable>
                         </View>
                     </View>
@@ -166,7 +172,11 @@ export default function SignupScreen() {
                                 onPress={() => setShowPasswordConfirm(!showPasswordConfirm)}
                                 style={signUpStyles.eyeBtn}
                             >
-                                <Text style={signUpStyles.eyeText}>{showPasswordConfirm ? '🙊' : '🙈️️'}</Text>
+                                <Ionicons
+                                    name={showPasswordConfirm ? "lock-open-outline" : "lock-closed-outline"}
+                                    size={20}
+                                    color="#aaa"
+                                />
                             </Pressable>
                         </View>
                         {passwordConfirm.length > 0 && (
