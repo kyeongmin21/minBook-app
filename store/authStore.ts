@@ -1,5 +1,6 @@
 import {create} from 'zustand';
 import {supabase} from '@/lib/supabase';
+import {useReadStore} from "@/store/readStore";
 
 interface User {
     id: string;
@@ -49,5 +50,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
     logout: async () => {
         await supabase.auth.signOut();
         set({user: null, isLoggedIn: false});
+        useReadStore.getState().clearReadList();
     },
 }));

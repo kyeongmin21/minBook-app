@@ -15,6 +15,7 @@ interface ReadStore {
     readList: ReadBook[];
     toggleRead: (book: Book) => void;
     updateReview: (isbn: string, rating: number, review: string, readAt: string) => void;
+    clearReadList: () => void;
 }
 
 export const useReadStore = create<ReadStore>()(
@@ -41,6 +42,7 @@ export const useReadStore = create<ReadStore>()(
                     ),
                 });
             },
+            clearReadList: () => set({readList: []}),
         }),
         {
             name: 'read-storage',

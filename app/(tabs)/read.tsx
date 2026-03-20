@@ -34,7 +34,7 @@ export default function TabReadScreen() {
             <Header/>
             <FlatList
                 data={readList}
-                contentContainerStyle={{backgroundColor: '#f5f5f5', paddingVertical: 8}}
+                contentContainerStyle={{paddingVertical: 8}}
                 keyExtractor={(item) => item.book.isbn}
                 renderItem={({item}) => (
                     <Pressable onPress={() => openModal(item)} style={readStyles.cardContainer}>
