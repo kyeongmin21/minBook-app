@@ -1,11 +1,11 @@
-import {StyleSheet, View, TextInput, FlatList, Text} from 'react-native';
+import {View, TextInput, FlatList, Text} from 'react-native';
 import Header from "@/components/Header";
 import {useState, useEffect} from 'react';
 import {searchBooks} from '@/api/books';
 import {BookItem} from "@/components/BookItem";
 import {useQuery, keepPreviousData} from '@tanstack/react-query';
 import {useWishlistStore} from '@/store/useWishlistStore';
-import {commonStyles} from "@/styles/commonStyles";
+import {homeStyles} from "@/styles/homeStyles";
 
 
 export default function HomeScreen() {
@@ -24,20 +24,20 @@ export default function HomeScreen() {
     const {data, isLoading, isError} = useQuery({
         queryKey: ['books', debouncedQuery],
         queryFn: () => searchBooks(debouncedQuery || '에세이'),
-        placeholderData: keepPreviousData,
+        placeholderData: keepPreviousData, // 검색어가 바뀔때 이전 결과를 유지해주는 옵션
     });
 
     return (
-        <View style={commonStyles.container}>
+        <View style={homeStyles.container}>
             <Header />
             <FlatList data={data}
                       numColumns={2}
-                      columnWrapperStyle={styles.columnWrapper}
+                      columnWrapperStyle={homeStyles.columnWrapper}
                       contentContainerStyle={{flexGrow: 1}}
                       keyExtractor={(item, index) => item.isbn + index}
                       ListHeaderComponent={
                           <TextInput
-                              style={styles.input}
+                              style={homeStyles.input}
                               placeholder={"검색어를 입력하세요"}
                               value={query}
                               onChangeText={setQuery}
@@ -53,12 +53,12 @@ export default function HomeScreen() {
                       )}
                       ListEmptyComponent={
                           isLoading ? (
-                              <View style={styles.emptyContainer}>
-                                  <Text style={styles.emptyText}>로딩 중...</Text>
+                              <View style={homeStyles.emptyContainer}>
+                                  <Text style={homeStyles.emptyText}>로딩 중...</Text>
                               </View>
                           ) : isError ? (
-                              <View style={styles.emptyContainer}>
-                                  <Text style={styles.emptyText}>에러 발생!</Text>
+                              <View style={homeStyles.emptyContainer}>
+                                  <Text style={homeStyles.emptyText}>에러 발생!</Text>
                               </View>
                           ) : null
                       }
@@ -67,31 +67,3 @@ export default function HomeScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    input: {
-        height: 50,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        paddingHorizontal: 15,
-        marginLeft: 20,
-        marginRight: 20,
-        marginTop: 20,
-        borderRadius: 10,
-        backgroundColor: '#f9f9f9',
-    },
-    columnWrapper: {
-        justifyContent: 'space-between',
-        paddingHorizontal: 10,
-    },
-    emptyContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingBottom: 100,
-    },
-    emptyText: {
-        fontSize: 16,
-        color: '#999',
-        fontWeight: '500',
-    },
-});
