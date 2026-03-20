@@ -5,6 +5,8 @@ export interface Book {
     authors: string[];
     price: number;
     datetime: string;
+    contents: string;
+    publisher: string;
 }
 
 export interface WishlistState {

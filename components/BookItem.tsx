@@ -2,6 +2,7 @@ import {Image} from "expo-image";
 import {Book} from "@/types/wishlist";
 import {View, Text, Pressable} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
+import {router} from "expo-router";
 import {commonStyles} from "@/styles/commonStyles";
 
 
@@ -13,10 +14,31 @@ interface BookItemProps {
 
 export const BookItem = ({item, isWished, onToggle}: BookItemProps) => {
     return (
-        <View style={commonStyles.itemContainer}>
+        <Pressable
+            style={commonStyles.itemContainer}
+            onPress={() => router.push({
+                pathname: '/book/[detail]',
+                params: {
+                    detail: item.isbn,
+                    title: item.title,
+                    thumbnail: item.thumbnail,
+                    authors: JSON.stringify(item.authors),
+                    price: item.price,
+                    datetime: item.datetime,
+                    contents: item.contents,
+                    publisher: item.publisher,
+                }
+            })}
+        >
             <View>
                 <Image source={{uri: item.thumbnail}} style={commonStyles.thumbnail} contentFit="cover"/>
-                <Pressable onPress={() => onToggle(item)} style={commonStyles.wishlistIcon}>
+                <Pressable
+                    onPress={(e) => {
+                        e.stopPropagation(); // ← 카드 클릭 이벤트 막기
+                        onToggle(item);
+                    }}
+                    style={commonStyles.wishlistIcon}
+                >
                     <Ionicons
                         name={isWished ? "heart" : "heart-outline"}
                         size={28}
@@ -29,8 +51,7 @@ export const BookItem = ({item, isWished, onToggle}: BookItemProps) => {
                 <Text
                     style={commonStyles.authors}>{Array.isArray(item.authors) ? item.authors.join(', ') : item.authors}</Text>
                 <Text style={commonStyles.price}>{item.price?.toLocaleString()}원</Text>
-                <Text style={commonStyles.date}>{item.datetime?.split('T')[0]}</Text>
             </View>
-        </View>
+        </Pressable>
     );
 };
