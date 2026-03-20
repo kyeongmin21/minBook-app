@@ -69,6 +69,8 @@ export const useWishlistStore = create<WishlistStore>((
                     book_authors: book.authors.join(', '),
                     book_price: book.price,
                     book_datetime: book.datetime,
+                    book_contents: book.contents,
+                    book_publisher: book.publisher,
                 });
 
             set({wishlist: [...get().wishlist, book]});
