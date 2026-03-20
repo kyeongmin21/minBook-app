@@ -1,12 +1,12 @@
-import {useEffect} from "react";
-import {BookItem} from "@/components/BookItem";
-import Header from "@/components/Header";
-import {router} from 'expo-router';
-import {FlatList, View, Text, Pressable} from 'react-native';
+import {FlatList, View, Text} from 'react-native';
 import {useAuthStore} from '@/store/authStore';
-import {commonStyles} from "@/styles/commonStyles";
-import {useWishlistStore} from "@/store/useWishlistStore";
-import {wishlistStyles} from "@/styles/wishlistStyles";
+import {commonStyles} from '@/styles/commonStyles';
+import {useWishlistStore} from '@/store/useWishlistStore';
+import {wishlistStyles} from '@/styles/wishlistStyles';
+import {useEffect} from 'react';
+import {BookItem} from '@/components/BookItem';
+import Header from '@/components/Header';
+import LoginRequired from '@/components/LoginRequired';
 
 
 export default function TabWishScreen() {
@@ -21,14 +21,7 @@ export default function TabWishScreen() {
     }, [isLoggedIn]);
 
     if (!isLoggedIn) {
-        return (
-            <View style={wishlistStyles.loginContainer}>
-                <Text style={wishlistStyles.loginText}>로그인 후 이용할 수 있어요.</Text>
-                <Pressable style={wishlistStyles.loginBtn} onPress={() => router.push('/login')}>
-                    <Text style={wishlistStyles.loginBtnText}>로그인하러 가기</Text>
-                </Pressable>
-            </View>
-        );
+        return <LoginRequired />;
     }
 
     return (
