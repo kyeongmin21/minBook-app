@@ -4,6 +4,7 @@ import {useState, useEffect} from 'react';
 import {searchBooks} from '@/api/books';
 import {BookItem} from "@/components/BookItem";
 import {useQuery, keepPreviousData} from '@tanstack/react-query';
+import {useGridColumns} from "@/hooks/useGridColumns";
 import {useWishlistStore} from '@/store/useWishlistStore';
 import {homeStyles} from "@/styles/homeStyles";
 
@@ -12,6 +13,7 @@ export default function HomeScreen() {
     const [query, setQuery] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState("");
     const {wishlist, toggleWishlist} = useWishlistStore();
+    const {numColumns, itemWidth} = useGridColumns();
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -29,9 +31,10 @@ export default function HomeScreen() {
 
     return (
         <View style={homeStyles.container}>
-            <Header />
+            <Header/>
             <FlatList data={data}
-                      numColumns={2}
+                      numColumns={numColumns}
+                      key={numColumns}
                       columnWrapperStyle={homeStyles.columnWrapper}
                       contentContainerStyle={{flexGrow: 1}}
                       keyExtractor={(item, index) => item.isbn + index}
@@ -49,6 +52,7 @@ export default function HomeScreen() {
                               item={item}
                               isWished={wishlist.some(w => w.isbn === item.isbn)}
                               onToggle={toggleWishlist}
+                              itemWidth={itemWidth}
                           />
                       )}
                       ListEmptyComponent={

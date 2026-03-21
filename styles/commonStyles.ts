@@ -29,7 +29,7 @@ export const commonStyles = StyleSheet.create({
         alignSelf: 'center',
     },
     columnWrapper: {
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         paddingHorizontal: 10,
     },
     itemContainer: {

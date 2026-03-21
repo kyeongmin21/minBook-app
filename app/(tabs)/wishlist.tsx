@@ -4,6 +4,7 @@ import {commonStyles} from '@/styles/commonStyles';
 import {useWishlistStore} from '@/store/useWishlistStore';
 import {wishlistStyles} from '@/styles/wishlistStyles';
 import {useEffect} from 'react';
+import {useGridColumns} from "@/hooks/useGridColumns";
 import {BookItem} from '@/components/BookItem';
 import Header from '@/components/Header';
 import LoginRequired from '@/components/LoginRequired';
@@ -12,6 +13,7 @@ import LoginRequired from '@/components/LoginRequired';
 export default function TabWishScreen() {
     const {wishlist, toggleWishlist, fetchWishlist} = useWishlistStore();
     const {isLoggedIn} = useAuthStore();
+    const {numColumns, itemWidth} = useGridColumns();
 
 
     useEffect(() => {
@@ -21,7 +23,7 @@ export default function TabWishScreen() {
     }, [isLoggedIn]);
 
     if (!isLoggedIn) {
-        return <LoginRequired />;
+        return <LoginRequired/>;
     }
 
     return (
@@ -29,7 +31,8 @@ export default function TabWishScreen() {
             <Header/>
             <FlatList
                 data={wishlist}
-                numColumns={2}
+                numColumns={numColumns}
+                key={numColumns}
                 columnWrapperStyle={commonStyles.columnWrapper}
                 keyExtractor={(item) => item.isbn}
                 ListHeaderComponent={
@@ -40,6 +43,7 @@ export default function TabWishScreen() {
                         item={item}
                         isWished={wishlist.some(w => w.isbn === item.isbn)}
                         onToggle={toggleWishlist}
+                        itemWidth={itemWidth}
                     />
                 )}
                 ListEmptyComponent={

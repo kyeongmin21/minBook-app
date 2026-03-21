@@ -17,7 +17,7 @@ export const homeStyles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
     },
     columnWrapper: {
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         paddingHorizontal: 10,
     },
     emptyContainer: {
