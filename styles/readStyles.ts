@@ -102,14 +102,22 @@ export const readStyles = StyleSheet.create({
         height: 100,
         textAlignVertical: 'top',
     },
+    buttonContainer: {
+        flexDirection: 'row',
+        gap: 8
+    },
+    deleteBtn: {
+        backgroundColor: '#888'
+    },
     // 저장 버튼
-    saveBtn: {
+    button: {
+        flex: 1,
         backgroundColor: '#1a1a1a',
         borderRadius: 8,
         padding: 14,
         alignItems: 'center',
     },
-    saveBtnText: {
+    buttonText: {
         color: '#fff',
         fontWeight: 'bold',
     },

@@ -1,4 +1,4 @@
-import {View, Text, FlatList, Modal, TextInput, Pressable} from 'react-native';
+import {View, Text, FlatList, Modal, TextInput, Alert, Pressable, Platform} from 'react-native';
 import {Image} from 'expo-image';
 import {useReadStore, ReadBook} from '@/store/readStore';
 import {readStyles} from '@/styles/readStyles';
@@ -12,7 +12,7 @@ import {Loading} from "@/components/Loading";
 
 export default function TabReadScreen() {
     const {isLoggedIn, isInitialized} = useAuthStore();
-    const {readList, updateReview, fetchReadList} = useReadStore();
+    const {readList, updateReview, fetchReadList, deleteBook} = useReadStore();
     const [selected, setSelected] = useState<ReadBook | null>(null);
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
@@ -31,6 +31,33 @@ export default function TabReadScreen() {
         if (!selected) return;
         await updateReview(selected.book.isbn, rating, review, readAt);
         closeModal();
+    };
+
+    const handleDelete = () => {
+        if (!selected) return;
+
+        if (Platform.OS === 'web') {
+            const ok = confirm(`"${selected.book.title}"을(를) 목록에서 삭제할까요?`);
+            if (!ok) return;
+            deleteBook(selected.book.isbn);
+            closeModal();
+        } else {
+            Alert.alert(
+                '삭제 확인',
+                `"${selected.book.title}"을(를) 목록에서 삭제할까요?`,
+                [
+                    {text: '취소', style: 'cancel'},
+                    {
+                        text: '삭제',
+                        style: 'destructive',
+                        onPress: async () => {
+                            await deleteBook(selected.book.isbn);
+                            closeModal();
+                        },
+                    },
+                ]
+            );
+        }
     };
 
     useEffect(() => {
@@ -120,9 +147,14 @@ export default function TabReadScreen() {
                     />
 
                     {/* 저장 버튼 */}
-                    <Pressable onPress={handleSave} style={readStyles.saveBtn}>
-                        <Text style={readStyles.saveBtnText}>저장</Text>
-                    </Pressable>
+                    <View style={readStyles.buttonContainer}>
+                        <Pressable onPress={handleDelete} style={[readStyles.button, readStyles.deleteBtn]}>
+                            <Text style={readStyles.buttonText}>삭제</Text>
+                        </Pressable>
+                        <Pressable onPress={handleSave} style={readStyles.button}>
+                            <Text style={readStyles.buttonText}>저장</Text>
+                        </Pressable>
+                    </View>
                 </View>
             </Modal>
         </View>

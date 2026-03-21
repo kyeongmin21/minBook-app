@@ -14,6 +14,7 @@ interface ReadStore {
     fetchReadList: () => Promise<void>;
     toggleRead: (book: Book) => Promise<void>;
     updateReview: (isbn: string, rating: number, review: string, readAt: string) => Promise<void>;
+    deleteBook: (isbn: string) => Promise<void>;
     clearReadList: () => void;
 }
 
@@ -111,6 +112,19 @@ export const useReadStore = create<ReadStore>((set, get) => ({
                 r.book.isbn === isbn ? {...r, rating, review, readAt} : r
             ),
         });
+    },
+
+    deleteBook: async (isbn: string) => {
+        const {data: {user}} = await supabase.auth.getUser();
+        await supabase
+            .from('read_books')
+            .delete()
+            .eq('user_id', user!.id)
+            .eq('book_isbn', isbn.trim());
+
+        set((state) => ({
+            readList: state.readList.filter(b => b.book.isbn !== isbn),
+        }))
     },
 
     // 로그아웃 시 상태 초기화
