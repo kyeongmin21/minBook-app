@@ -4,6 +4,7 @@ import {DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {Drawer} from 'expo-router/drawer';
 import {supabase} from '@/lib/supabase';
 import {useAuthStore} from '@/store/authStore';
+import {useWishlistStore} from '@/store/useWishlistStore';
 import {useEffect} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -18,15 +19,18 @@ export default function RootLayout() {
         supabase.auth.getSession().then(({data: {session}}) => {
             if (session) {
                 useAuthStore.getState().fetchUser();
+                useWishlistStore.getState().fetchWishlist();
             }
         });
 
         const {data: {subscription}} = supabase.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
                 useAuthStore.getState().fetchUser();
+                useWishlistStore.getState().fetchWishlist();
             }
             if (event === 'INITIAL_SESSION' && session) {
                 useAuthStore.getState().fetchUser();
+                useWishlistStore.getState().fetchWishlist();
             }
         });
 
