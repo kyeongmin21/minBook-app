@@ -9,13 +9,10 @@ interface WishlistStore {
     toggleWishlist: (book: Book) => Promise<void>;
 }
 
-export const useWishlistStore = create<WishlistStore>((
-    set,
-    get
-) => ({
+export const useWishlistStore = create<WishlistStore>((set, get) => ({
     wishlist: [],
 
-    // 위시리스트 불러오기
+    // 위시리스트 불러오기 - DB에서 바로 가져오기
     fetchWishlist: async () => {
         const {data: {user}} = await supabase.auth.getUser();
         if (!user) return;
@@ -28,14 +25,14 @@ export const useWishlistStore = create<WishlistStore>((
         if (data) {
             set({
                 wishlist: data.map(item => ({
-                    isbn: item.book_isbn,
-                    title: item.book_title,
-                    thumbnail: item.book_thumbnail,
-                    authors: item.book_authors ? item.book_authors.split(', ') : [],
-                    price: item.book_price ?? 0,
-                    datetime: item.book_datetime ?? '',
-                    contents: item.book_contents ?? '',
-                    publisher: item.book_publisher ?? '',
+                    isbn: item.isbn,
+                    title: item.title,
+                    thumbnail: item.thumbnail,
+                    authors: item.authors ?? [],
+                    price: item.price ?? 0,
+                    datetime: item.datetime ?? '',
+                    contents: item.contents ?? '',
+                    publisher: item.publisher ?? '',
                 }))
             });
         }
@@ -54,7 +51,7 @@ export const useWishlistStore = create<WishlistStore>((
                 .from('wishlists')
                 .delete()
                 .eq('user_id', user.id)
-                .eq('book_isbn', book.isbn);
+                .eq('isbn', book.isbn);
 
             set({wishlist: get().wishlist.filter(w => w.isbn !== book.isbn)});
         } else {
@@ -63,14 +60,14 @@ export const useWishlistStore = create<WishlistStore>((
                 .from('wishlists')
                 .insert({
                     user_id: user.id,
-                    book_isbn: book.isbn,
-                    book_title: book.title,
-                    book_thumbnail: book.thumbnail,
-                    book_authors: book.authors.join(', '),
-                    book_price: book.price,
-                    book_datetime: book.datetime,
-                    book_contents: book.contents,
-                    book_publisher: book.publisher,
+                    isbn: book.isbn,
+                    title: book.title,
+                    thumbnail: book.thumbnail,
+                    authors: book.authors,
+                    price: book.price,
+                    datetime: book.datetime,
+                    contents: book.contents,
+                    publisher: book.publisher,
                 });
 
             set({wishlist: [...get().wishlist, book]});
