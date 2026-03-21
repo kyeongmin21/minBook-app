@@ -8,13 +8,12 @@ import {useGridColumns} from "@/hooks/useGridColumns";
 import {BookItem} from '@/components/BookItem';
 import Header from '@/components/Header';
 import LoginRequired from '@/components/LoginRequired';
-
+import {Loading} from "@/components/Loading";
 
 export default function TabWishScreen() {
     const {wishlist, toggleWishlist, fetchWishlist} = useWishlistStore();
-    const {isLoggedIn} = useAuthStore();
+    const {isLoggedIn, isInitialized} = useAuthStore();
     const {numColumns, itemWidth} = useGridColumns();
-
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -22,9 +21,8 @@ export default function TabWishScreen() {
         }
     }, [isLoggedIn]);
 
-    if (!isLoggedIn) {
-        return <LoginRequired/>;
-    }
+    if (!isInitialized) return <Loading />; // 세션 확인 중엔 로딩중표시
+    if (!isLoggedIn) return <LoginRequired/>;
 
     return (
         <View style={commonStyles.container}>

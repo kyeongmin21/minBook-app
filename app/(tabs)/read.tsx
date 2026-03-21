@@ -7,10 +7,11 @@ import {useState, useEffect} from 'react';
 import {Ionicons} from '@expo/vector-icons';
 import Header from '@/components/Header';
 import LoginRequired from '@/components/LoginRequired';
+import {Loading} from "@/components/Loading";
 
 
 export default function TabReadScreen() {
-    const {isLoggedIn} = useAuthStore();
+    const {isLoggedIn, isInitialized} = useAuthStore();
     const {readList, updateReview, fetchReadList} = useReadStore();
     const [selected, setSelected] = useState<ReadBook | null>(null);
     const [rating, setRating] = useState(0);
@@ -38,9 +39,8 @@ export default function TabReadScreen() {
         }
     }, [isLoggedIn]);
 
-    if (!isLoggedIn) {
-        return <LoginRequired />;
-    }
+    if (!isInitialized) return <Loading />; // 세션 확인 중엔 로딩중표시
+    if (!isLoggedIn) return <LoginRequired/>;
 
     return (
         <View style={readStyles.container}>

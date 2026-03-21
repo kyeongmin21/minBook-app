@@ -12,6 +12,7 @@ interface User {
 interface AuthStore {
     user: User | null;
     isLoggedIn: boolean;
+    isInitialized: boolean;
     setUser: (user: User | null) => void;
     fetchUser: () => Promise<void>;
     logout: () => Promise<void>;
@@ -20,6 +21,7 @@ interface AuthStore {
 export const useAuthStore = create<AuthStore>((set) => ({
     user: null,
     isLoggedIn: false,
+    isInitialized: false,
 
     setUser: (user) => set({user, isLoggedIn: !!user}),
 
@@ -45,6 +47,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
                 isLoggedIn: true,
             });
         }
+
+        set({isInitialized: true});
     },
 
     logout: async () => {
