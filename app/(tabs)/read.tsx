@@ -1,4 +1,4 @@
-import {View, Text, FlatList, Modal, TextInput, Alert, Pressable, Platform} from 'react-native';
+import {View, Text, FlatList, Modal, TextInput, Alert, Pressable, Platform, ScrollView} from 'react-native';
 import {Image} from 'expo-image';
 import {useReadStore, ReadBook} from '@/store/readStore';
 import {readStyles} from '@/styles/readStyles';
@@ -8,6 +8,7 @@ import {Ionicons} from '@expo/vector-icons';
 import Header from '@/components/Header';
 import LoginRequired from '@/components/LoginRequired';
 import {Loading} from "@/components/Loading";
+import MonthlyBarChart from "@/components/MonthlyBarChart";
 
 
 export default function TabReadScreen() {
@@ -17,6 +18,17 @@ export default function TabReadScreen() {
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
     const [readAt, setReadAt] = useState('');
+    const [selectedYear, setSelectedYear] = useState<string>('전체');
+
+    // 년도 목록 (내림차순)
+    const years = ['전체', ...[...new Set(
+        readList.map(item => item.readAt?.slice(0, 4)).filter(Boolean)
+    )].sort((a, b) => Number(b) - Number(a))];
+
+    // 필터된 책 목록
+    const filteredList = selectedYear === '전체'
+        ? readList
+        : readList.filter(item => item.readAt?.startsWith(selectedYear));
 
     const openModal = (item: ReadBook) => {
         setSelected(item);
@@ -35,7 +47,6 @@ export default function TabReadScreen() {
 
     const handleDelete = () => {
         if (!selected) return;
-
         if (Platform.OS === 'web') {
             const ok = confirm(`"${selected.book.title}"을(를) 목록에서 삭제할까요?`);
             if (!ok) return;
@@ -61,24 +72,55 @@ export default function TabReadScreen() {
     };
 
     useEffect(() => {
-        if (isLoggedIn) {
-            fetchReadList();
-        }
+        if (isLoggedIn) fetchReadList();
     }, [isLoggedIn]);
 
-    if (!isInitialized) return <Loading />; // 세션 확인 중엔 로딩중표시
+    if (!isInitialized) return <Loading/>;
     if (!isLoggedIn) return <LoginRequired/>;
 
     return (
         <View style={readStyles.container}>
             <Header/>
+
             <FlatList
-                data={readList}
+                data={filteredList}
                 contentContainerStyle={{paddingVertical: 8}}
                 keyExtractor={(item) => item.book.isbn}
+                ListHeaderComponent={
+                    <View>
+                        {/* 셀렉트박스 */}
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            contentContainerStyle={readStyles.yearPickerContainer}>
+                            {years.map(year => (
+                                <Pressable
+                                    key={year}
+                                    onPress={() => setSelectedYear(year)}
+                                    style={[
+                                        readStyles.yearBtn,
+                                        selectedYear === year && readStyles.yearBtnActive,
+                                    ]}>
+                                    <Text style={[
+                                        readStyles.yearBtnText,
+                                        selectedYear === year && readStyles.yearBtnTextActive,
+                                    ]}>{year}</Text>
+                                </Pressable>
+                            ))}
+                        </ScrollView>
+
+                        {/* 막대그래프 */}
+                        {selectedYear !== '전체' && (
+                            <MonthlyBarChart
+                                selectedYear={selectedYear}
+                                totalCount={filteredList.length}
+                                readList={readList}
+                            />
+                        )}
+                    </View>
+                }
                 renderItem={({item}) => (
                     <Pressable onPress={() => openModal(item)} style={readStyles.cardContainer}>
-                        {/* 위쪽: 책표지 + 기본정보 */}
                         <View style={{flexDirection: 'row', gap: 12}}>
                             <Image source={{uri: item.book.thumbnail}} style={readStyles.thumbnail}/>
                             <View style={readStyles.cardInfo}>
@@ -90,8 +132,6 @@ export default function TabReadScreen() {
                                 )}
                             </View>
                         </View>
-
-                        {/* 아래쪽: 감상평 */}
                         {item.review ? (
                             <Text style={readStyles.cardReview}>{item.review}</Text>
                         ) : (
@@ -114,8 +154,6 @@ export default function TabReadScreen() {
                     <Text style={readStyles.modalTitle} numberOfLines={1}>
                         {selected?.book.title}
                     </Text>
-
-                    {/* 별점 */}
                     <View style={readStyles.starContainer}>
                         {[1, 2, 3, 4, 5].map((star) => (
                             <Pressable key={star} onPress={() => setRating(star)}>
@@ -127,16 +165,12 @@ export default function TabReadScreen() {
                             </Pressable>
                         ))}
                     </View>
-
-                    {/* 읽은 날짜 */}
                     <TextInput
                         value={readAt}
                         onChangeText={setReadAt}
                         placeholder='읽은 날짜 (예: 2025-03-20)'
                         style={readStyles.input}
                     />
-
-                    {/* 감상평 */}
                     <TextInput
                         value={review}
                         onChangeText={setReview}
@@ -145,8 +179,6 @@ export default function TabReadScreen() {
                         numberOfLines={4}
                         style={readStyles.reviewInput}
                     />
-
-                    {/* 저장 버튼 */}
                     <View style={readStyles.buttonContainer}>
                         <Pressable onPress={handleDelete} style={[readStyles.button, readStyles.deleteBtn]}>
                             <Text style={readStyles.buttonText}>삭제</Text>

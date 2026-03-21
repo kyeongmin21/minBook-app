@@ -121,4 +121,40 @@ export const readStyles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
     },
+
+    yearPickerContainer: {
+        flexDirection: 'row',
+        gap: 8,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+    },
+    yearBtn: {
+        paddingHorizontal: 14,
+        paddingVertical: 6,
+        borderRadius: 20,
+        backgroundColor: '#f0f0f0',
+    },
+    yearBtnActive: {
+        backgroundColor: '#333',
+    },
+    yearBtnText: {
+        fontSize: 14,
+        color: '#666',
+    },
+    yearBtnTextActive: {
+        color: '#fff',
+        fontWeight: '600',
+    },
+    chartContainer: {
+        height: 250,
+        paddingHorizontal: 8,
+        marginVertical: 10,
+    },
+    chartTitle: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#333',
+        paddingHorizontal: 8,
+        marginBottom: 4,
+    },
 });
