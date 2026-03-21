@@ -1,7 +1,10 @@
 import {Image} from 'expo-image';
+import {Book} from '@/types/book'
+import {useEffect, useState} from 'react';
 import {Ionicons} from '@expo/vector-icons';
+import {Loading} from '@/components/Loading';
 import {View, Text, ScrollView, Pressable} from 'react-native';
-import {router} from 'expo-router';
+import {router, useLocalSearchParams} from 'expo-router';
 import {useWishlistStore} from '@/store/useWishlistStore';
 import {detailStyles} from '@/styles/detailStyles';
 import {useReadStore} from '@/store/readStore';
@@ -10,15 +13,57 @@ import {useBookStore} from '@/store/useBookStore';
 
 export default function BookDetailScreen() {
     const {selectedBook} = useBookStore();
-    const book = selectedBook;
-
+    const {detail} = useLocalSearchParams();
     const {readList, toggleRead} = useReadStore();
     const {wishlist, toggleWishlist} = useWishlistStore();
 
-    if (!book) return null;
+    const [book, setBook] = useState<Book | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setBook(null);
+        setLoading(true);
+
+        const fetchBook = async () => {
+            const isbn = decodeURIComponent((detail as string).replace(/\+/g, ' '));
+
+            // 1. selectedBook 있고 isbn 일치하면 바로 사용
+            if (selectedBook && selectedBook.isbn === isbn) {
+                setBook(selectedBook);
+                setLoading(false);
+                return;
+            }
+
+            // 2. Zustand wishlist에서 찾기
+            const wished = wishlist.find(w => w.isbn === isbn);
+            if (wished) {
+                setBook(wished);
+                setLoading(false);
+                return;
+            }
+
+            // 3. 둘 다 없으면 카카오 API (새로고침한 경우)
+            const isbnOnly = isbn.split(' ').pop();// 13자리 isbn만 사용
+            const res = await fetch(
+                `https://dapi.kakao.com/v3/search/book?query=${isbnOnly}&target=isbn`,
+                {headers: {Authorization: `KakaoAK ${process.env.EXPO_PUBLIC_KAKAO_API_KEY}`}}
+            );
+            const json = await res.json();
+
+            if (json.documents?.[0]) setBook(json.documents[0]);
+            setLoading(false);
+        };
+
+        fetchBook();
+    }, [detail]);
+
+
+    if (loading) return <Loading />;
+    if (!book) return <Text>책을 찾을 수 없습니다.</Text>;
 
     const isRead = readList.some(r => r.book.isbn === book.isbn);
     const isWished = wishlist.some(w => w.isbn === book.isbn);
+
 
     return (
         <ScrollView style={detailStyles.container}>
