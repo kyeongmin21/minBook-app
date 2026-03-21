@@ -39,7 +39,7 @@ export default function TabLayout() {
                         <Image
                             source={require('@/assets/images/home.png')}
                             style={{
-                                width: 30,
+                                width: 35,
                                 height: 30,
                             }}
                         />
@@ -55,7 +55,7 @@ export default function TabLayout() {
                             source={require('@/assets/images/read.png')}
                             style={{
                                 width: 30,
-                                height: 30,
+                                height: 32,
                             }}
                         />
                     )
