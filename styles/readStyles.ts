@@ -71,10 +71,6 @@ export const readStyles = StyleSheet.create({
         borderTopRightRadius: 20,
         padding: 24,
         gap: 16,
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
     },
     modalTitle: {
         fontSize: 16,

@@ -1,4 +1,16 @@
-import {View, Text, FlatList, Modal, TextInput, Alert, Pressable, Platform, ScrollView} from 'react-native';
+import {
+    View,
+    Text,
+    FlatList,
+    Modal,
+    TextInput,
+    StyleSheet,
+    ScrollView,
+    KeyboardAvoidingView,
+    Alert,
+    Pressable,
+    Platform,
+} from 'react-native';
 import {Image} from 'expo-image';
 import {useReadStore, ReadBook} from '@/store/readStore';
 import {readStyles} from '@/styles/readStyles';
@@ -26,9 +38,14 @@ export default function TabReadScreen() {
     )].sort((a, b) => Number(b) - Number(a))];
 
     // 필터된 책 목록
-    const filteredList = selectedYear === '전체'
-        ? readList
-        : readList.filter(item => item.readAt?.startsWith(selectedYear));
+    const filteredList = (selectedYear === '전체'
+            ? readList
+            : readList.filter(item => item.readAt?.startsWith(selectedYear))
+    ).sort((a, b) => {
+        if (!a.readAt) return 1;   // 날짜 없으면 뒤로
+        if (!b.readAt) return -1;
+        return b.readAt.localeCompare(a.readAt);  // 최신순 (내림차순)
+    });
 
     const openModal = (item: ReadBook) => {
         setSelected(item);
@@ -149,45 +166,58 @@ export default function TabReadScreen() {
 
             {/* 감상평 모달 */}
             <Modal visible={!!selected} animationType='slide' transparent>
-                <Pressable style={readStyles.modalOverlay} onPress={closeModal}/>
-                <View style={readStyles.modalContent}>
-                    <Text style={readStyles.modalTitle} numberOfLines={1}>
-                        {selected?.book.title}
-                    </Text>
-                    <View style={readStyles.starContainer}>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                            <Pressable key={star} onPress={() => setRating(star)}>
-                                <Ionicons
-                                    name={star <= rating ? 'star' : 'star-outline'}
-                                    size={32}
-                                    color='#f5a623'
-                                />
+                <KeyboardAvoidingView
+                    style={{flex: 1, justifyContent: 'flex-end'}}
+                    behavior="padding"
+                >
+                    <Pressable
+                        style={{...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.4)'}}
+                        onPress={closeModal}
+                    />
+
+                    <View style={readStyles.modalContent}>
+                        <Text style={readStyles.modalTitle} numberOfLines={1}>
+                            {selected?.book.title}
+                        </Text>
+
+                        <View style={readStyles.starContainer}>
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <Pressable key={star} onPress={() => setRating(star)}>
+                                    <Ionicons
+                                        name={star <= rating ? 'star' : 'star-outline'}
+                                        size={32}
+                                        color='#f5a623'
+                                    />
+                                </Pressable>
+                            ))}
+                        </View>
+
+                        <TextInput
+                            value={readAt}
+                            onChangeText={setReadAt}
+                            placeholder='읽은 날짜 (예: 2025-03-20)'
+                            style={readStyles.input}
+                        />
+
+                        <TextInput
+                            value={review}
+                            onChangeText={setReview}
+                            placeholder='감상평을 남겨보세요'
+                            multiline
+                            numberOfLines={4}
+                            style={readStyles.reviewInput}
+                        />
+
+                        <View style={readStyles.buttonContainer}>
+                            <Pressable onPress={handleDelete} style={[readStyles.button, readStyles.deleteBtn]}>
+                                <Text style={readStyles.buttonText}>삭제</Text>
                             </Pressable>
-                        ))}
+                            <Pressable onPress={handleSave} style={readStyles.button}>
+                                <Text style={readStyles.buttonText}>저장</Text>
+                            </Pressable>
+                        </View>
                     </View>
-                    <TextInput
-                        value={readAt}
-                        onChangeText={setReadAt}
-                        placeholder='읽은 날짜 (예: 2025-03-20)'
-                        style={readStyles.input}
-                    />
-                    <TextInput
-                        value={review}
-                        onChangeText={setReview}
-                        placeholder='감상평을 남겨보세요'
-                        multiline
-                        numberOfLines={4}
-                        style={readStyles.reviewInput}
-                    />
-                    <View style={readStyles.buttonContainer}>
-                        <Pressable onPress={handleDelete} style={[readStyles.button, readStyles.deleteBtn]}>
-                            <Text style={readStyles.buttonText}>삭제</Text>
-                        </Pressable>
-                        <Pressable onPress={handleSave} style={readStyles.button}>
-                            <Text style={readStyles.buttonText}>저장</Text>
-                        </Pressable>
-                    </View>
-                </View>
+                </KeyboardAvoidingView>
             </Modal>
         </View>
     );
