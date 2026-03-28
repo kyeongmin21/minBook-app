@@ -39,7 +39,7 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: '홈',
-                    tabBarLabel: (props) => <TabLabel {...props} label=" 홈"/>,
+                    tabBarLabel: (props) => <TabLabel {...props} label="홈"/>,
                     tabBarIcon: ({color}) => (
                         <Image
                             source={require('@/assets/images/home.png')}

@@ -22,34 +22,35 @@ export default function TabWishScreen() {
     }, [isLoggedIn]);
 
     if (!isInitialized) return <Loading />; // 세션 확인 중엔 로딩중표시
-    if (!isLoggedIn) return <LoginRequired/>;
 
     return (
         <View style={commonStyles.container}>
             <Header/>
-            <FlatList
-                data={wishlist}
-                numColumns={numColumns}
-                key={numColumns}
-                columnWrapperStyle={commonStyles.columnWrapper}
-                keyExtractor={(item) => item.isbn}
-                ListHeaderComponent={
-                    <Text style={{textAlign: 'center', marginVertical: 10}}>북마크</Text>
-                }
-                renderItem={({item}) => (
-                    <BookItem
-                        item={item}
-                        isWished={wishlist.some(w => w.isbn === item.isbn)}
-                        onToggle={toggleWishlist}
-                        itemWidth={itemWidth}
-                    />
-                )}
-                ListEmptyComponent={
-                    <View style={wishlistStyles.emptyContainer}>
-                        <Text style={wishlistStyles.emptyText}>찜한 도서가 없습니다.</Text>
-                    </View>
-                }
-            />
+            {isLoggedIn ? (
+                <FlatList
+                    data={wishlist}
+                    numColumns={numColumns}
+                    key={numColumns}
+                    columnWrapperStyle={commonStyles.columnWrapper}
+                    keyExtractor={(item) => item.isbn}
+                    ListHeaderComponent={
+                        <Text style={{textAlign: 'center', marginVertical: 10}}>북마크</Text>
+                    }
+                    renderItem={({item}) => (
+                        <BookItem
+                            item={item}
+                            isWished={wishlist.some(w => w.isbn === item.isbn)}
+                            onToggle={toggleWishlist}
+                            itemWidth={itemWidth}
+                        />
+                    )}
+                    ListEmptyComponent={
+                        <View style={wishlistStyles.emptyContainer}>
+                            <Text style={wishlistStyles.emptyText}>찜한 도서가 없습니다.</Text>
+                        </View>
+                    }
+                />
+            ) : (<LoginRequired/>)}
         </View>
     );
 }

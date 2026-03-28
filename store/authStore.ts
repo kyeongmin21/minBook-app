@@ -28,7 +28,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
     // 로그인 후 profiles 테이블에서 유저 정보 가져오기
     fetchUser: async () => {
         const {data: {user}} = await supabase.auth.getUser();
-        if (!user) return;
+        if (!user) {
+            set({isInitialized: true});
+            return;
+        }
 
         const {data: profile} = await supabase
             .from('profiles')
@@ -57,3 +60,5 @@ export const useAuthStore = create<AuthStore>((set) => ({
         useReadStore.getState().clearReadList();
     },
 }));
+
+useAuthStore.getState().fetchUser();

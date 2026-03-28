@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import {supabase} from '@/lib/supabase';
 import {loginStyles} from '@/styles/loginStyles'
 import {View, Text, TextInput, KeyboardAvoidingView, Pressable, Platform, Alert} from 'react-native';
+import {signUpStyles} from "@/styles/signUpStyles";
 
 
 
@@ -57,6 +58,11 @@ export default function LoginScreen() {
             style={loginStyles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
+            {/* 헤더 */}
+            <Pressable style={signUpStyles.backBtn} onPress={() => router.back()}>
+                <Text style={signUpStyles.backText}>← 돌아가기</Text>
+            </Pressable>
+
             {/* 타이틀 */}
             <View style={loginStyles.titleArea}>
                 <Text style={loginStyles.logo}>minBook</Text>
