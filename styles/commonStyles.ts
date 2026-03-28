@@ -8,7 +8,7 @@ export const commonStyles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: 90,
+        height: 82,
         paddingHorizontal: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
