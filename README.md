@@ -1,5 +1,5 @@
 # 📖 프로젝트 소개 (minBook - App)
-minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한 한줄평과 느낀점을 기록할 수 있는 나만의 독서 기록 앱입니다.
+minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 느낀점을 기록할 수 있는 나만의 독서 기록 앱입니다.
 
 홈 화면에서는 카카오 도서 검색 API를 통해 다양한 책 목록을 확인할 수 있으며,
 
@@ -25,12 +25,11 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
 
 ## 🛠 기술 스택
 
-- React Native
-- Expo
+- React Native (Expo)
 - TypeScript
 - Zustand
-- Supabase
-- Kakao Book Search API ([링크](https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book) , REST API 키)
+- Supabase (백엔드 구현 및 인증/DB 관리를 빠르게 처리하기 위해 사용)
+- Kakao Book Search API (도서 검색 기능 구현) [링크](https://developers.kakao.com/docs/latest/ko/daum-search/dev-guide#search-book)
 
 <br/><br/>
 
@@ -45,10 +44,8 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
     ```
    npx expo start --web
    ```
-   
 
 <br/><br/>
-
 
 ## App Image
 <p align="center">
@@ -64,3 +61,17 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 간단한
   <img src="./assets/images/image08.jpg" width="32%">
   <img src="./assets/images/image09.jpg" width="32%">
 </p>
+
+
+## ⚙️ 트러블슈팅 및 개선
+- 웹 환경에서 빠르게 UI를 확인하며 개발을 진행하고, Expo Go를 통해 실제 디바이스에서 동작을 검증했습니다. 
+이후 플랫폼 간 차이를 줄이기 위해 Xcode iOS 시뮬레이터(에뮬레이터)를 활용한 방법을 학습할 예정입니다.
+- 감상평 작성 모달에서 텍스트 입력 시 키보드와 입력 영역이 겹치는 문제를 겪었고, 
+이를 해결하기 위해 KeyboardAvoidingView를 적용하여 키보드 표시 여부에 따라 UI가 자동으로 조정되도록 개선했습니다.
+
+
+## 📌 추후 개선해야 할 사항
+
+- [ ] 미 로그인 시 마이페이지 접근 제한
+- [ ] 미 로그인 시 하트 클릭 시 알림창 표시
+- [ ] Vercel로 배포
