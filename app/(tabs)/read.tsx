@@ -21,6 +21,7 @@ import Header from '@/components/Header';
 import LoginRequired from '@/components/LoginRequired';
 import {Loading} from "@/components/Loading";
 import MonthlyBarChart from "@/components/MonthlyBarChart";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export default function TabReadScreen() {
@@ -194,11 +195,24 @@ export default function TabReadScreen() {
                                     ))}
                                 </View>
 
-                                <TextInput
-                                    value={readAt}
-                                    onChangeText={setReadAt}
-                                    placeholder='읽은 날짜 (예: 2025-03-20)'
-                                    style={readStyles.input}
+                                <DateTimePicker
+                                    locale='ko-KR'
+                                    textColor='#000'
+                                    themeVariant='light'
+                                    value={readAt && readAt.length === 10 ? new Date(readAt + 'T00:00:00') : new Date()}
+                                    mode='date'
+                                    display='compact'
+                                    maximumDate={new Date()}
+                                    style={{marginLeft: -20}}
+                                    onChange={(event, selectedDate) => {
+                                        if (event.type === 'dismissed') return;
+                                        if (selectedDate) {
+                                            const year = selectedDate.getFullYear();
+                                            const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+                                            const day = String(selectedDate.getDate()).padStart(2, '0');
+                                            setReadAt(`${year}-${month}-${day}`);
+                                        }
+                                    }}
                                 />
 
                                 <TextInput

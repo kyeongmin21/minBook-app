@@ -44,7 +44,7 @@ export const useReadStore = create<ReadStore>((set, get) => ({
                         contents: item.book_contents ?? '',
                         publisher: item.book_publisher ?? '',
                     },
-                    readAt: item.read_at,
+                    readAt: item.read_at ? item.read_at.slice(0, 10) : '',
                     rating: item.rating ?? 0,
                     review: item.review ?? '',
                 }))
