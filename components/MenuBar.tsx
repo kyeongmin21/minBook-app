@@ -65,13 +65,16 @@ export default function MenuBar(props: any) {
                         <Text style={menuBarStyles.menuText}>읽은 책</Text>
                     </Pressable>
 
-                    <Pressable
-                        style={menuBarStyles.menuItem}
-                        onPress={() => { props.navigation.closeDrawer(); router.push('/mypage'); }}
-                    >
-                        <Ionicons name="person-outline" size={20} color="#333" />
-                        <Text style={menuBarStyles.menuText}>마이페이지</Text>
-                    </Pressable>
+                    {isLoggedIn && (
+                        <Pressable
+                            style={menuBarStyles.menuItem}
+                            onPress={() => { props.navigation.closeDrawer(); router.push('/mypage'); }}
+                        >
+                            <Ionicons name="person-outline" size={20} color="#333" />
+                            <Text style={menuBarStyles.menuText}>마이페이지</Text>
+                        </Pressable>
+                    )}
+
                 </View>
 
                 {/* 로그아웃 (로그인 상태일 때만) */}

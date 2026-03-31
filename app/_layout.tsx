@@ -49,6 +49,7 @@ export default function RootLayout() {
                         }}
                     >
                         <Drawer.Screen name="(tabs)"/>
+                        <Drawer.Screen name="(protected)"/>
                         <Drawer.Screen name="login" options={{drawerItemStyle: {display: 'none'}}}/>
                     </Drawer>
                     <StatusBar style="auto"/>
