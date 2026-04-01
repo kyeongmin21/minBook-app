@@ -4,11 +4,11 @@ import {commonStyles} from '@/styles/commonStyles';
 import {useWishlistStore} from '@/store/useWishlistStore';
 import {wishlistStyles} from '@/styles/wishlistStyles';
 import {useEffect} from 'react';
-import {useGridColumns} from "@/hooks/useGridColumns";
 import {BookItem} from '@/components/BookItem';
-import Header from '@/components/Header';
+import {Loading} from '@/components/Loading';
+import {useGridColumns} from '@/hooks/useGridColumns';
 import LoginRequired from '@/components/LoginRequired';
-import {Loading} from "@/components/Loading";
+
 
 export default function TabWishScreen() {
     const {wishlist, toggleWishlist, fetchWishlist} = useWishlistStore();
@@ -25,7 +25,6 @@ export default function TabWishScreen() {
 
     return (
         <View style={commonStyles.container}>
-            <Header/>
             {isLoggedIn ? (
                 <FlatList
                     data={wishlist}

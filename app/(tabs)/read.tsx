@@ -17,10 +17,9 @@ import {readStyles} from '@/styles/readStyles';
 import {useAuthStore} from '@/store/authStore';
 import {useState, useEffect} from 'react';
 import {Ionicons} from '@expo/vector-icons';
-import Header from '@/components/Header';
+import {Loading} from '@/components/Loading';
 import LoginRequired from '@/components/LoginRequired';
-import {Loading} from "@/components/Loading";
-import MonthlyBarChart from "@/components/MonthlyBarChart";
+import MonthlyBarChart from '@/components/MonthlyBarChart';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
@@ -66,14 +65,14 @@ export default function TabReadScreen() {
     const handleDelete = () => {
         if (!selected) return;
         if (Platform.OS === 'web') {
-            const ok = confirm(`"${selected.book.title}"을(를) 목록에서 삭제할까요?`);
+            const ok = confirm(`'${selected.book.title}'을(를) 목록에서 삭제할까요?`);
             if (!ok) return;
             deleteBook(selected.book.isbn);
             closeModal();
         } else {
             Alert.alert(
                 '삭제 확인',
-                `"${selected.book.title}"을(를) 목록에서 삭제할까요?`,
+                `'${selected.book.title}'을(를) 목록에서 삭제할까요?`,
                 [
                     {text: '취소', style: 'cancel'},
                     {
@@ -98,8 +97,6 @@ export default function TabReadScreen() {
 
     return (
         <View style={readStyles.container}>
-            <Header/>
-
             {isLoggedIn ? (
                 <>
                     <FlatList
@@ -171,7 +168,7 @@ export default function TabReadScreen() {
                     <Modal visible={!!selected} animationType='slide' transparent>
                         <KeyboardAvoidingView
                             style={{flex: 1, justifyContent: 'flex-end'}}
-                            behavior="padding"
+                            behavior='padding'
                         >
                             <Pressable
                                 style={{...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.4)'}}

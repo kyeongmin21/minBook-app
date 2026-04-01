@@ -1,5 +1,4 @@
 import {View, TextInput, FlatList, Text, Alert, Platform} from 'react-native';
-import Header from "@/components/Header";
 import {useState, useEffect} from 'react';
 import {searchBooks} from '@/api/books';
 import {BookItem} from "@/components/BookItem";
@@ -56,7 +55,6 @@ export default function HomeScreen() {
 
     return (
         <View style={homeStyles.container}>
-            <Header/>
             <FlatList data={data}
                       numColumns={numColumns}
                       key={numColumns}

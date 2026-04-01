@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const commonStyles = StyleSheet.create({
     container: {
@@ -8,11 +8,10 @@ export const commonStyles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: 82,
         paddingHorizontal: 15,
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
-        marginTop: 10,
+        backgroundColor: '#fff',
     },
     headerSide: {
         flex: 1, // 양쪽 사이드가 똑같은 공간을 차지함
@@ -25,7 +24,7 @@ export const commonStyles = StyleSheet.create({
     },
     logo: {
         width: 100,
-        height: 80,
+        height: 65,
         alignSelf: 'center',
     },
     columnWrapper: {

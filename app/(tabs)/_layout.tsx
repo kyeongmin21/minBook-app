@@ -4,6 +4,7 @@ import {Text, StyleSheet, View} from 'react-native';
 import {Tabs} from 'expo-router';
 import {Colors} from '@/constants/theme';
 import {useAuthStore} from '@/store/authStore';
+import Header from '@/components/Header';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {HapticTab} from '@/components/haptic-tab';
 import {useColorScheme} from '@/hooks/use-color-scheme';
@@ -28,8 +29,9 @@ export default function TabLayout() {
     return (
         <Tabs
             screenOptions={{
+                header: () => <Header/>,
+                headerStyle: {backgroundColor: '#fff'},
                 tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-                headerShown: false,
                 tabBarButton: HapticTab,
             }}>
             <Tabs.Screen
@@ -45,11 +47,12 @@ export default function TabLayout() {
                     ),
                 }}
             />
+
             <Tabs.Screen
                 name='index'
                 options={{
                     title: '홈',
-                    tabBarLabel: (props) => <TabLabel {...props} label='홈'/>,
+                    tabBarLabel: (props) => <TabLabel {...props} label=' 홈'/>,
                     tabBarIcon: ({color}) => (
                         <Image
                             source={require('@/assets/images/home.png')}
@@ -58,6 +61,7 @@ export default function TabLayout() {
                     )
                 }}
             />
+
             <Tabs.Screen
                 name='read'
                 options={{
@@ -71,7 +75,6 @@ export default function TabLayout() {
                     )
                 }}
             />
-
 
             <Tabs.Screen
                 name='profile'
