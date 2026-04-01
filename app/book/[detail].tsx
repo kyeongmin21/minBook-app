@@ -10,6 +10,7 @@ import {detailStyles} from '@/styles/detailStyles';
 import {useReadStore} from '@/store/readStore';
 import {useBookStore} from '@/store/useBookStore';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {fetchPublicReviews} from "@/api/publicReviews";
 
 
 export default function BookDetailScreen() {
@@ -22,6 +23,15 @@ export default function BookDetailScreen() {
 
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
+    const [publicReviews, setPublicReviews] = useState<any[]>([]);
+
+    useEffect(() => {
+        if (!book) return;
+        fetchPublicReviews(book.isbn)
+            .then(setPublicReviews)
+            .catch(console.error);
+    }, [book]);
+
 
     useEffect(() => {
         setBook(null);
@@ -125,6 +135,48 @@ export default function BookDetailScreen() {
                     <Text style={detailStyles.contents}>{book.contents}</Text>
                 </View>
             ) : null}
+
+
+
+            {/* 책 소개 아래에 추가 */}
+            {publicReviews.length > 0 && (
+                <View style={detailStyles.reviewSection}>
+                    <Text style={detailStyles.reviewSectionTitle}>독자 리뷰</Text>
+                    {publicReviews.map((item, index) => (
+                        <View key={index} style={detailStyles.reviewCard}>
+                            {/* 프로필 + 날짜 */}
+                            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                                {item.profiles?.avatar_url ? (
+                                    <Image
+                                        source={{ uri: item.profiles.avatar_url }}
+                                        style={detailStyles.reviewAvatar}
+                                        contentFit='cover'
+                                    />
+                                ) : (
+                                    <View style={[detailStyles.reviewAvatar, detailStyles.reviewAvatarFallback]}>
+                                        <Ionicons name='person' size={14} color='#aaa' />
+                                    </View>
+                                )}
+                                <View style={{ flex: 1, marginLeft: 8 }}>
+                                    <Text style={detailStyles.reviewNickname}>
+                                        {item.profiles?.nickname ?? '익명'}
+                                    </Text>
+                                    <Text style={detailStyles.reviewDate}>
+                                        {item.read_at?.slice(0, 10)}
+                                    </Text>
+                                </View>
+                                {/* 별점 */}
+                                {item.rating > 0 && (
+                                    <Text style={detailStyles.reviewRating}>
+                                        {'★'.repeat(item.rating)}{'☆'.repeat(5 - item.rating)}
+                                    </Text>
+                                )}
+                            </View>
+                            <Text style={detailStyles.reviewText}>{item.review}</Text>
+                        </View>
+                    ))}
+                </View>
+            )}
         </ScrollView>
     );
 }
