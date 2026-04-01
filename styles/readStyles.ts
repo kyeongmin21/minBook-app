@@ -142,9 +142,8 @@ export const readStyles = StyleSheet.create({
         fontWeight: '600',
     },
     chartContainer: {
-        height: 250,
         paddingHorizontal: 8,
-        marginVertical: 10,
+        marginVertical: 15,
     },
     chartTitle: {
         fontSize: 14,
