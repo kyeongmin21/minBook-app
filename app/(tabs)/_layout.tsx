@@ -52,7 +52,7 @@ export default function TabLayout() {
                 name='index'
                 options={{
                     title: '홈',
-                    tabBarLabel: (props) => <TabLabel {...props} label=' 홈'/>,
+                    tabBarLabel: (props) => <TabLabel {...props} label='홈'/>,
                     tabBarIcon: ({color}) => (
                         <Image
                             source={require('@/assets/images/home.png')}
@@ -105,6 +105,7 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
     label: {
         fontWeight: 'normal',
+        fontSize: 11,
     },
     focusedLabel: {
         fontWeight: 'bold',
