@@ -1,82 +1,38 @@
 import {useState} from 'react';
 import {useRouter} from 'expo-router';
+import {useSignup} from "@/hooks/useSignUp";
+import {useSignupValidation} from '@/hooks/useSignUpValidation';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {supabase} from '@/lib/supabase';
-import {signUpStyles} from "@/styles/signUpStyles";
-import {View, Text, TextInput, KeyboardAvoidingView, ScrollView, Pressable, Platform, Alert} from 'react-native';
+import ValidationText from '@/components/validate/ValidationText';
+import {useWindowDimensions,
+    View, Text, TextInput, KeyboardAvoidingView, ScrollView,
+    Pressable, Platform} from 'react-native';
+import {signUpStyles} from '@/styles/signUpStyles';
 
 
 export default function SignupScreen() {
     const router = useRouter();
+    const [userId, setUserId] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
-    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
+    const {handleSignup, checkUserId, loading} = useSignup();
+    const {validateUserId, validateEmail} = useSignupValidation();
 
-    const handleSignup = async () => {
-        if (!name || !nickname || !email || !password || !passwordConfirm) {
-            Alert.alert('알림', '모든 항목을 입력해주세요.');
-            return;
-        }
-        if (password !== passwordConfirm) {
-            Alert.alert('알림', '비밀번호가 일치하지 않아요.');
-            return;
-        }
-        if (password.length < 6) {
-            Alert.alert('알림', '비밀번호는 6자 이상이어야 해요.');
-            return;
-        }
-
-        setLoading(true);
-
-        // 1. 회원가입
-        const {data, error} = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {name, nickname},
-            },
-        });
-
-        if (error) {
-            Alert.alert('오류', error.message);
-            setLoading(false);
-            return;
-        }
-
-        // 2. profiles 테이블에도 저장
-        const {error: profileError} = await supabase
-            .from('profiles')
-            .insert({
-                id: data.user?.id,
-                email,
-                name,
-                nickname,
-            });
-
-        setLoading(false);
-
-        if (profileError) {
-            Alert.alert('오류', profileError.message);
-            return;
-        }
-
-        Alert.alert('가입 완료!', '로그인해주세요.', [
-            {text: '확인', onPress: () => router.replace('/login')},
-        ]);
-    };
+    const {width} = useWindowDimensions();
+    const isTablet = width >= 768;
 
     return (
         <KeyboardAvoidingView
             style={signUpStyles.container}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-            <ScrollView contentContainerStyle={signUpStyles.inner} keyboardShouldPersistTaps="handled">
+            <ScrollView contentContainerStyle={signUpStyles.inner} keyboardShouldPersistTaps='handled'>
 
                 {/* 헤더 */}
                 <Pressable style={signUpStyles.backBtn} onPress={() => router.back()}>
@@ -91,26 +47,41 @@ export default function SignupScreen() {
                 {/* 입력 폼 */}
                 <View style={signUpStyles.form}>
                     <View>
-                        <Text style={signUpStyles.label}>이름</Text>
-                        <TextInput
-                            style={signUpStyles.input}
-                            placeholder="이름"
-                            placeholderTextColor="#aaa"
-                            value={name}
-                            onChangeText={setName}
-                            autoCapitalize="none"
+                        <Text style={signUpStyles.label}>아이디</Text>
+                        <View style={{flexDirection: isTablet ? 'row' : 'column', gap: 8}}>
+                            <TextInput
+                                style={[signUpStyles.input, isTablet && {flex: 1}]}
+                                placeholder='영문 소문자, 숫자만 사용 가능'
+                                placeholderTextColor='#aaa'
+                                value={userId}
+                                onChangeText={(text) => setUserId(text.toLowerCase())}
+                                autoCapitalize='none'
+                                maxLength={15}
+                            />
+                            <Pressable
+                                style={[signUpStyles.duplicateCheckBtn, {paddingVertical: isTablet ? 0 : 12}]}
+                                onPress={() => checkUserId(userId)}>
+                                <Text style={{color: '#333', fontSize: 13}}>중복확인</Text>
+                            </Pressable>
+                        </View>
+                        <ValidationText
+                            value={userId}
+                            isValid={!validateUserId(userId)}
+                            validMsg='올바른 형식이에요'
+                            invalidMsg='영문 소문자, 숫자만 사용할 수 있어요'
                         />
                     </View>
 
                     <View>
-                        <Text style={signUpStyles.label}>닉네임</Text>
+                        <Text style={signUpStyles.label}>이름</Text>
                         <TextInput
                             style={signUpStyles.input}
-                            placeholder="사용할 닉네임"
-                            placeholderTextColor="#aaa"
-                            value={nickname}
-                            onChangeText={setNickname}
-                            autoCapitalize="none"
+                            placeholder='이름'
+                            placeholderTextColor='#aaa'
+                            value={name}
+                            onChangeText={setName}
+                            autoCapitalize='none'
+                            maxLength={15}
                         />
                     </View>
 
@@ -118,12 +89,32 @@ export default function SignupScreen() {
                         <Text style={signUpStyles.label}>이메일</Text>
                         <TextInput
                             style={signUpStyles.input}
-                            placeholder="example@email.com"
-                            placeholderTextColor="#aaa"
+                            placeholder='example@email.com'
+                            placeholderTextColor='#aaa'
                             value={email}
                             onChangeText={setEmail}
-                            keyboardType="email-address"
-                            autoCapitalize="none"
+                            keyboardType='email-address'
+                            autoCapitalize='none'
+                        />
+                        <ValidationText
+                            value={email}
+                            isValid={!validateEmail(email)}
+                            validMsg='올바른 이메일 형식이에요'
+                            invalidMsg='이메일 형식이 올바르지 않아요'
+                        />
+                    </View>
+
+
+                    <View>
+                        <Text style={signUpStyles.label}>닉네임</Text>
+                        <TextInput
+                            style={signUpStyles.input}
+                            placeholder='사용할 닉네임'
+                            placeholderTextColor='#aaa'
+                            value={nickname}
+                            onChangeText={setNickname}
+                            autoCapitalize='none'
+                            maxLength={15}
                         />
                     </View>
 
@@ -132,8 +123,8 @@ export default function SignupScreen() {
                         <View style={signUpStyles.inputWrapper}>
                             <TextInput
                                 style={signUpStyles.inputFlex}
-                                placeholder="6자 이상"
-                                placeholderTextColor="#aaa"
+                                placeholder='6자 이상'
+                                placeholderTextColor='#aaa'
                                 value={password}
                                 onChangeText={setPassword}
                                 secureTextEntry={!showPassword}
@@ -143,9 +134,9 @@ export default function SignupScreen() {
                                 style={signUpStyles.eyeBtn}
                             >
                                 <Ionicons
-                                    name={showPassword ? "lock-open-outline" : "lock-closed-outline"}
+                                    name={showPassword ? 'lock-open-outline' : 'lock-closed-outline'}
                                     size={20}
-                                    color="#aaa"
+                                    color='#aaa'
                                 />
                             </Pressable>
                         </View>
@@ -161,8 +152,8 @@ export default function SignupScreen() {
                         ]}>
                             <TextInput
                                 style={signUpStyles.inputFlex}
-                                placeholder="비밀번호 재입력"
-                                placeholderTextColor="#aaa"
+                                placeholder='비밀번호 재입력'
+                                placeholderTextColor='#aaa'
                                 value={passwordConfirm}
                                 onChangeText={setPasswordConfirm}
                                 secureTextEntry={!showPasswordConfirm}
@@ -172,26 +163,24 @@ export default function SignupScreen() {
                                 style={signUpStyles.eyeBtn}
                             >
                                 <Ionicons
-                                    name={showPasswordConfirm ? "lock-open-outline" : "lock-closed-outline"}
+                                    name={showPasswordConfirm ? 'lock-open-outline' : 'lock-closed-outline'}
                                     size={20}
-                                    color="#aaa"
+                                    color='#aaa'
                                 />
                             </Pressable>
                         </View>
-                        {passwordConfirm.length > 0 && (
-                            <Text style={{
-                                fontSize: 12, marginTop: 4,
-                                color: password === passwordConfirm ? '#4CAF50' : '#FF5252'
-                            }}>
-                                {password === passwordConfirm ? '✓ 비밀번호가 일치해요' : '✗ 비밀번호가 일치하지 않아요'}
-                            </Text>
-                        )}
+                        <ValidationText
+                            value={passwordConfirm}
+                            isValid={password === passwordConfirm}
+                            validMsg='비밀번호가 일치해요'
+                            invalidMsg='비밀번호가 일치하지 않아요'
+                        />
                     </View>
 
                     {/* 가입 버튼 */}
                     <Pressable
                         style={[signUpStyles.signupBtn, loading && signUpStyles.btnDisabled]}
-                        onPress={handleSignup}
+                        onPress={() => handleSignup({userId, name, nickname, email, password, passwordConfirm})}
                         disabled={loading}
                     >
                         <Text style={signUpStyles.signupBtnText}>

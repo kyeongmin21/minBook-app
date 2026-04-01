@@ -63,6 +63,13 @@ export const signUpStyles = StyleSheet.create({
     btnDisabled: {
         backgroundColor: '#999',
     },
+    duplicateCheckBtn: {
+        backgroundColor: '#E8E8E8',
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     signupBtnText: {
         color: '#fff',
         fontSize: 16,

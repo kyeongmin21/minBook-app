@@ -4,6 +4,7 @@ import {useReadStore} from "@/store/readStore";
 
 interface User {
     id: string;
+    user_id: string;
     email: string;
     name: string;
     nickname: string;
@@ -45,6 +46,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             set({
                 user: {
                     id: user.id,
+                    user_id: profile.user_id,
                     email: profile.email,
                     name: profile.name,
                     nickname: profile.nickname,
