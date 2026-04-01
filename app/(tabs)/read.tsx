@@ -1,16 +1,5 @@
-import {
-    View,
-    Text,
-    FlatList,
-    Modal,
-    TextInput,
-    StyleSheet,
-    ScrollView,
-    KeyboardAvoidingView,
-    Alert,
-    Pressable,
-    Platform,
-} from 'react-native';
+import {View, Text, FlatList, Modal, TextInput, StyleSheet, ScrollView, KeyboardAvoidingView,
+    Alert, Pressable, Platform,} from 'react-native';
 import {Image} from 'expo-image';
 import {useReadStore, ReadBook} from '@/store/readStore';
 import {readStyles} from '@/styles/readStyles';
@@ -25,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function TabReadScreen() {
     const {isLoggedIn, isInitialized} = useAuthStore();
-    const {readList, updateReview, fetchReadList, deleteBook} = useReadStore();
+    const {readList, updateReview, fetchReadList, deleteBook, togglePublic} = useReadStore();
     const [selected, setSelected] = useState<ReadBook | null>(null);
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
@@ -166,10 +155,7 @@ export default function TabReadScreen() {
 
                     {/* 감상평 모달 */}
                     <Modal visible={!!selected} animationType='slide' transparent>
-                        <KeyboardAvoidingView
-                            style={{flex: 1, justifyContent: 'flex-end'}}
-                            behavior='padding'
-                        >
+                        <KeyboardAvoidingView style={{flex: 1, justifyContent: 'flex-end'}} behavior='padding'>
                             <Pressable
                                 style={{...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.4)'}}
                                 onPress={closeModal}
@@ -180,17 +166,35 @@ export default function TabReadScreen() {
                                     {selected?.book.title}
                                 </Text>
 
-                                <View style={readStyles.starContainer}>
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <Pressable key={star} onPress={() => setRating(star)}>
-                                            <Ionicons
-                                                name={star <= rating ? 'star' : 'star-outline'}
-                                                size={32}
-                                                color='#f5a623'
-                                            />
-                                        </Pressable>
-                                    ))}
+
+                                {/* 별점 + 공개/비공개 한 줄 */}
+                                <View style={readStyles.starRow}>
+                                    <View style={readStyles.starContainer}>
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <Pressable key={star} onPress={() => setRating(star)}>
+                                                <Ionicons
+                                                    name={star <= rating ? 'star' : 'star-outline'}
+                                                    size={20}
+                                                    color='#333'
+                                                />
+                                            </Pressable>
+                                        ))}
+                                    </View>
+                                    <Pressable style={readStyles.publicToggle}
+                                               onPress={() => {
+                                                   togglePublic(selected!.book.isbn);
+                                                   setSelected(prev => prev ? { ...prev, isPublic: !prev.isPublic } : null);
+                                               }}>
+                                        <Ionicons
+                                            name={selected?.isPublic ? 'lock-open-outline' : 'lock-closed-outline'}
+                                            size={16}
+                                            color={selected?.isPublic ? '#4CAF50' : '#aaa'}/>
+                                        <Text style={{fontSize: 13, color: selected?.isPublic ? '#4CAF50' : '#aaa'}}>
+                                            {selected?.isPublic ? '공개' : '비공개'}
+                                        </Text>
+                                    </Pressable>
                                 </View>
+
 
                                 <DateTimePicker
                                     locale='ko-KR'
@@ -200,7 +204,7 @@ export default function TabReadScreen() {
                                     mode='date'
                                     display='compact'
                                     maximumDate={new Date()}
-                                    style={{marginLeft: -20}}
+                                    style={{marginLeft: -4, marginBottom: 4}}
                                     onChange={(event, selectedDate) => {
                                         if (event.type === 'dismissed') return;
                                         if (selectedDate) {
@@ -209,8 +213,7 @@ export default function TabReadScreen() {
                                             const day = String(selectedDate.getDate()).padStart(2, '0');
                                             setReadAt(`${year}-${month}-${day}`);
                                         }
-                                    }}
-                                />
+                                    }}/>
 
                                 <TextInput
                                     value={review}
@@ -218,8 +221,7 @@ export default function TabReadScreen() {
                                     placeholder='감상평을 남겨보세요'
                                     multiline
                                     numberOfLines={4}
-                                    style={readStyles.reviewInput}
-                                />
+                                    style={readStyles.reviewInput}/>
 
                                 <View style={readStyles.buttonContainer}>
                                     <Pressable onPress={handleDelete} style={[readStyles.button, readStyles.deleteBtn]}>

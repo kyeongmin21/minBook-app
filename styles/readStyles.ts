@@ -70,7 +70,7 @@ export const readStyles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         padding: 24,
-        gap: 16,
+        gap: 8,
     },
     modalTitle: {
         fontSize: 16,
@@ -151,5 +151,21 @@ export const readStyles = StyleSheet.create({
         color: '#333',
         paddingHorizontal: 8,
         marginBottom: 4,
+    },
+    starRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 6,
+    },
+    publicToggle: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        paddingVertical: 6,
+        paddingHorizontal: 10,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#eee',
     },
 });

@@ -7,6 +7,7 @@ export interface ReadBook {
     readAt: string;
     rating: number;
     review: string;
+    isPublic: boolean;
 }
 
 interface ReadStore {
@@ -16,6 +17,7 @@ interface ReadStore {
     updateReview: (isbn: string, rating: number, review: string, readAt: string) => Promise<void>;
     deleteBook: (isbn: string) => Promise<void>;
     clearReadList: () => void;
+    togglePublic: (isbn: string) => Promise<void>;
 }
 
 export const useReadStore = create<ReadStore>((set, get) => ({
@@ -47,6 +49,7 @@ export const useReadStore = create<ReadStore>((set, get) => ({
                     readAt: item.read_at ? item.read_at.slice(0, 10) : '',
                     rating: item.rating ?? 0,
                     review: item.review ?? '',
+                    isPublic: item.is_public ?? false,
                 }))
             });
         }
@@ -91,6 +94,7 @@ export const useReadStore = create<ReadStore>((set, get) => ({
                     readAt: new Date().toISOString().split('T')[0],
                     rating: 0,
                     review: '',
+                    isPublic: false,
                 }]
             });
         }
@@ -110,6 +114,29 @@ export const useReadStore = create<ReadStore>((set, get) => ({
         set({
             readList: get().readList.map(r =>
                 r.book.isbn === isbn ? {...r, rating, review, readAt} : r
+            ),
+        });
+    },
+
+    // 토글 추가
+    togglePublic: async (isbn: string) => {
+        const {data: {user}} = await supabase.auth.getUser();
+        if (!user) return;
+
+        const current = get().readList.find(r => r.book.isbn === isbn);
+        if (!current) return;
+
+        const newValue = !current.isPublic;
+
+        await supabase
+            .from('read_books')
+            .update({is_public: newValue})
+            .eq('user_id', user.id)
+            .eq('book_isbn', isbn);
+
+        set({
+            readList: get().readList.map(r =>
+                r.book.isbn === isbn ? {...r, isPublic: newValue} : r
             ),
         });
     },
