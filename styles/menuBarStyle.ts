@@ -5,7 +5,7 @@ export const menuBarStyles = StyleSheet.create({
         flex: 1,
         padding: 20},
     userArea: {
-        paddingVertical: 20
+        paddingVertical: 10
     },
     nickname: {
         fontSize: 18,

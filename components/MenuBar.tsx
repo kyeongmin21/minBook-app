@@ -26,7 +26,9 @@ export default function MenuBar(props: any) {
                 {/* 유저 정보 */}
                 {isLoggedIn ? (
                     <View style={menuBarStyles.userArea}>
-                        <Text style={menuBarStyles.nickname}>{user?.nickname}님</Text>
+                        <Pressable onPress={() => router.push('/profile')}>
+                            <Text style={menuBarStyles.nickname}>{user?.nickname}님</Text>
+                        </Pressable>
                         <Text style={menuBarStyles.email}>{user?.email}</Text>
                     </View>
                 ) : (
