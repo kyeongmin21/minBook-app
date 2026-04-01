@@ -9,9 +9,12 @@ import {useWishlistStore} from '@/store/useWishlistStore';
 import {detailStyles} from '@/styles/detailStyles';
 import {useReadStore} from '@/store/readStore';
 import {useBookStore} from '@/store/useBookStore';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 
 export default function BookDetailScreen() {
+    const insets = useSafeAreaInsets();
+
     const {selectedBook} = useBookStore();
     const {detail} = useLocalSearchParams();
     const {readList, toggleRead} = useReadStore();
@@ -57,7 +60,6 @@ export default function BookDetailScreen() {
         fetchBook();
     }, [detail]);
 
-
     if (loading) return <Loading />;
     if (!book) return <Text>책을 찾을 수 없습니다.</Text>;
 
@@ -69,7 +71,8 @@ export default function BookDetailScreen() {
         <ScrollView style={detailStyles.container}>
 
             {/* 뒤로가기 */}
-            <Pressable style={detailStyles.backBtn} onPress={() => router.back()}>
+            <Pressable style={[detailStyles.backBtn, {marginTop: insets.top}]}
+                       onPress={() => router.back()}>
                 <Ionicons name='arrow-back' size={24} color='#1a1a1a'/>
             </Pressable>
 
