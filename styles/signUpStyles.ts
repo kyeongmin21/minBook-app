@@ -25,11 +25,13 @@ export const signUpStyles = StyleSheet.create({
         fontWeight: '800',
         color: '#1a1a1a',
         letterSpacing: -1,
+        textAlign: 'center',
     },
     subtitle: {
         fontSize: 14,
         color: '#999',
         marginTop: 6,
+        textAlign: 'center',
     },
     form: {
         gap: 20,
@@ -56,6 +58,7 @@ export const signUpStyles = StyleSheet.create({
         paddingVertical: 16,
         alignItems: 'center',
         marginTop: 10,
+        marginBottom: 20,
     },
     btnDisabled: {
         backgroundColor: '#999',
@@ -63,7 +66,7 @@ export const signUpStyles = StyleSheet.create({
     signupBtnText: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: '700',
+        fontWeight: '700'
     },
     loginLink: {
         alignItems: 'center',
@@ -94,4 +97,43 @@ export const signUpStyles = StyleSheet.create({
     eyeText: {
         fontSize: 18,
     },
+    maxLengthText: {
+        fontSize: 11,
+        color: '#aaa',
+        textAlign: 'right',
+        marginTop: 2
+    },
+    profilePhoto: {
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    profileImage: {
+        width: 90,
+        height: 90,
+        borderRadius: 45,
+        backgroundColor: '#eee',
+        borderWidth: 1,
+        borderColor: '#eee'
+    },
+    profileView:  {
+        width: 90,
+        height: 90,
+        borderRadius: 45,
+        backgroundColor: '#eee',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    camera: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        backgroundColor: '#000',
+        borderRadius: 12,
+        padding: 4
+    },
+    profileText: {
+        fontSize: 12,
+        color: '#aaa',
+        marginTop: 6
+    }
 });

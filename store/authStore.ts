@@ -7,6 +7,8 @@ interface User {
     email: string;
     name: string;
     nickname: string;
+    bio: string;
+    avatar_url: string;
 }
 
 interface AuthStore {
@@ -46,6 +48,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
                     email: profile.email,
                     name: profile.name,
                     nickname: profile.nickname,
+                    bio: profile.bio,
+                    avatar_url: profile.avatar_url,
                 },
                 isLoggedIn: true,
             });
