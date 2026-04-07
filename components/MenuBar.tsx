@@ -1,10 +1,11 @@
 import {useRouter} from 'expo-router';
-import {View, Text, Pressable, Alert} from 'react-native';
+import {View, Text, Pressable, Alert, Platform} from 'react-native';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {useAuthStore} from '@/store/authStore';
 import {supabase} from '@/lib/supabase';
 import {menuBarStyles} from "@/styles/menuBarStyle";
 import Ionicons from "@expo/vector-icons/Ionicons";
+
 
 export default function MenuBar(props: any) {
     const router = useRouter();
@@ -14,9 +15,14 @@ export default function MenuBar(props: any) {
         await supabase.auth.signOut();
         useAuthStore.getState().logout(); // zustand 상태 초기화
         props.navigation.closeDrawer();
-        Alert.alert('로그아웃', '로그아웃 되었습니다.', [
-            { text: '확인', onPress: () => router.replace('/') }
-        ]);
+
+        if (Platform.OS === 'web') {
+            router.replace('/');
+        } else {
+            Alert.alert('로그아웃', '로그아웃 되었습니다.', [
+                {text: '확인', onPress: () => router.replace('/')}
+            ]);
+        }
     };
 
     return (
