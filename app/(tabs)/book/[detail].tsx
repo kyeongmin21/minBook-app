@@ -9,6 +9,7 @@ import {useWishlistStore} from '@/store/useWishlistStore';
 import {detailStyles} from '@/styles/detailStyles';
 import {useReadStore} from '@/store/readStore';
 import {useBookStore} from '@/store/useBookStore';
+import {useAuthStore} from "@/store/authStore";
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fetchPublicReviews} from "@/api/publicReviews";
 
@@ -24,6 +25,18 @@ export default function BookDetailScreen() {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(true);
     const [publicReviews, setPublicReviews] = useState<any[]>([]);
+
+    const {user} = useAuthStore();
+    const handleProfilePress = (userId: string) => {
+        if (userId === user?.user_id) {
+            // 내 프로필
+            router.push('/(tabs)/profile');
+        } else {
+            // 다른 사람 프로필
+            router.push(`/(protected)/user/${userId}`);
+        }
+    };
+
 
     useEffect(() => {
         if (!book) return;
@@ -70,7 +83,7 @@ export default function BookDetailScreen() {
         fetchBook();
     }, [detail]);
 
-    if (loading) return <Loading />;
+    if (loading) return <Loading/>;
     if (!book) return <Text>책을 찾을 수 없습니다.</Text>;
 
     const isRead = readList.some(r => r.book.isbn === book.isbn);
@@ -137,34 +150,39 @@ export default function BookDetailScreen() {
             ) : null}
 
 
-
-            {/* 책 소개 아래에 추가 */}
+            {/* 읽은책 공개한 사람들이 작성한 감상평 */}
             {publicReviews.length > 0 && (
                 <View style={detailStyles.reviewSection}>
                     <Text style={detailStyles.reviewSectionTitle}>독자 리뷰</Text>
                     {publicReviews.map((item, index) => (
                         <View key={index} style={detailStyles.reviewCard}>
                             {/* 프로필 + 날짜 */}
-                            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
-                                {item.profiles?.avatar_url ? (
-                                    <Image
-                                        source={{ uri: item.profiles.avatar_url }}
-                                        style={detailStyles.reviewAvatar}
-                                        contentFit='cover'
-                                    />
-                                ) : (
-                                    <View style={[detailStyles.reviewAvatar, detailStyles.reviewAvatarFallback]}>
-                                        <Ionicons name='person' size={14} color='#aaa' />
-                                    </View>
-                                )}
-                                <View style={{ flex: 1, marginLeft: 8 }}>
-                                    <Text style={detailStyles.reviewNickname}>
-                                        {item.profiles?.nickname ?? '익명'}
-                                    </Text>
+                            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 6}}>
+                                <Pressable onPress={() => handleProfilePress(item.profiles?.user_id)}>
+                                    {item.profiles?.avatar_url ? (
+                                        <Image
+                                            source={{uri: item.profiles.avatar_url}}
+                                            style={detailStyles.reviewAvatar}
+                                            contentFit='cover'
+                                        />
+                                    ) : (
+                                        <View style={[detailStyles.reviewAvatar, detailStyles.reviewAvatarFallback]}>
+                                            <Ionicons name='person' size={14} color='#aaa'/>
+                                        </View>
+                                    )}
+                                </Pressable>
+
+                                <View style={{flex: 1, marginLeft: 8}}>
+                                    <Pressable onPress={() => handleProfilePress(item.profiles?.user_id)}>
+                                        <Text style={detailStyles.reviewNickname}>
+                                            {item.profiles?.nickname ?? '익명'}
+                                        </Text>
+                                    </Pressable>
                                     <Text style={detailStyles.reviewDate}>
                                         {item.read_at?.slice(0, 10)}
                                     </Text>
                                 </View>
+
                                 {/* 별점 */}
                                 {item.rating > 0 && (
                                     <Text style={detailStyles.reviewRating}>
@@ -172,6 +190,7 @@ export default function BookDetailScreen() {
                                     </Text>
                                 )}
                             </View>
+
                             <Text style={detailStyles.reviewText}>{item.review}</Text>
                         </View>
                     ))}

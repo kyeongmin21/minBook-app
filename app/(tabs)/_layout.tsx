@@ -97,6 +97,8 @@ export default function TabLayout() {
                 }}
             />
 
+            <Tabs.Screen name="book/[detail]" options={{href: null}}/>
+            <Tabs.Screen name="user/[userId]" options={{href: null}}/>
         </Tabs>
     );
 }
