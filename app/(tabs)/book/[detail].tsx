@@ -16,7 +16,7 @@ import {fetchPublicReviews} from "@/api/publicReviews";
 
 export default function BookDetailScreen() {
     const insets = useSafeAreaInsets();
-
+    const {user} = useAuthStore();
     const {selectedBook} = useBookStore();
     const {detail} = useLocalSearchParams();
     const {readList, toggleRead} = useReadStore();
@@ -26,14 +26,12 @@ export default function BookDetailScreen() {
     const [loading, setLoading] = useState(true);
     const [publicReviews, setPublicReviews] = useState<any[]>([]);
 
-    const {user} = useAuthStore();
+
     const handleProfilePress = (userId: string) => {
         if (userId === user?.user_id) {
-            // 내 프로필
             router.push('/(tabs)/profile');
         } else {
-            // 다른 사람 프로필
-            router.push(`/(protected)/user/${userId}`);
+            router.push(`/(tabs)/user/${userId}?bookIsbn=${encodeURIComponent(book!.isbn)}`);
         }
     };
 

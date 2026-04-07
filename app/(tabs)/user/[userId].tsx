@@ -1,52 +1,45 @@
 import {Image} from 'expo-image';
-import {View, Text, FlatList} from 'react-native';
-import {useLocalSearchParams} from 'expo-router';
-import {useEffect, useState} from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import {View, Text, FlatList, Pressable} from 'react-native';
+import {router, useLocalSearchParams} from 'expo-router';
 import {supabase} from '@/lib/supabase';
 import {profileStyles} from '@/styles/profileStyles';
+import {useEffect, useState} from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {UserProfile} from "@/types/user";
+import {WishlistItem} from "@/types/wishlist";
 
-
-type UserProfile = {
-    id: string;
-    nickname: string;
-    avatar_url: string | null;
-    bio: string | null;
-};
-
-type WishlistItem = {
-    isbn: string;
-    thumbnail: string;
-};
 
 export default function UserProfileScreen() {
-    const {userId} = useLocalSearchParams<{userId: string}>();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+    const insets = useSafeAreaInsets();
+    const {userId, bookIsbn} = useLocalSearchParams<{userId: string, bookIsbn: string}>();
 
-    useEffect(() => {
-        fetchUserProfile();
-        fetchUserWishlist();
-    }, [userId]);
-
-    const fetchUserProfile = async () => {
+    const fetchUserWishlist = async (profileId: string) => {
         const {data} = await supabase
-            .from('profiles')
-            .select('id, nickname, avatar_url, bio')
-            .eq('user_id', userId)
-            .single();
-
-        if (data) setProfile(data);
-    };
-
-    const fetchUserWishlist = async () => {
-        const {data} = await supabase
-            .from('wishlists')        // 본인 테이블명으로 변경
+            .from('wishlists')
             .select('isbn, thumbnail')
-            .eq('user_id', userId);
-
+            .eq('user_id', profileId);
         if (data) setWishlist(data);
     };
+
+    useEffect(() => {
+        const loadData = async () => {
+            const {data: profileData} = await supabase
+                .from('profiles')
+                .select('id, nickname, avatar_url, bio')
+                .eq('user_id', userId)
+                .single();
+
+            if (profileData) {
+                setProfile(profileData);
+                fetchUserWishlist(profileData.id);
+            }
+        };
+
+        loadData();
+    }, [userId]);
 
     return (
         <FlatList
@@ -56,6 +49,12 @@ export default function UserProfileScreen() {
             keyExtractor={(item) => item.isbn}
             ListHeaderComponent={
                 <View>
+                    <Pressable
+                        style={{marginTop: insets.top, padding: 16}}
+                        onPress={() => router.push(`/(tabs)/book/${encodeURIComponent(bookIsbn)}`)}
+                    >
+                        <Ionicons name='arrow-back' size={24} color='#1a1a1a'/>
+                    </Pressable>
                     <View style={profileStyles.profileSection}>
                         {profile?.avatar_url ? (
                             <Image source={{uri: profile.avatar_url}} style={profileStyles.avatar}/>

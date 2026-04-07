@@ -13,3 +13,8 @@ export interface WishlistState {
     wishlist: Book[];
     toggleWishlist: (book: Book) => void;
 }
+
+export interface WishlistItem {
+    isbn: string;
+    thumbnail: string;
+}
