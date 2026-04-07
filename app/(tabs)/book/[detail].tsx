@@ -27,12 +27,8 @@ export default function BookDetailScreen() {
     const [publicReviews, setPublicReviews] = useState<any[]>([]);
 
 
-    const handleProfilePress = (userId: string) => {
-        if (userId === user?.user_id) {
-            router.push('/(tabs)/profile');
-        } else {
-            router.push(`/(tabs)/user/${userId}?bookIsbn=${encodeURIComponent(book!.isbn)}`);
-        }
+    const handleProfilePress = (profileUserId: string) => {
+        router.push(`/(tabs)/user/${profileUserId}?bookIsbn=${encodeURIComponent(book!.isbn)}`);
     };
 
 

@@ -1,85 +1,44 @@
-import {Image} from 'expo-image';
-import {View, Text, FlatList, Pressable} from 'react-native';
 import {router} from "expo-router";
+import {supabase} from "@/lib/supabase";
 import {useAuthStore} from '@/store/authStore';
 import {useWishlistStore} from '@/store/useWishlistStore';
-import {profileStyles} from '@/styles/profileStyles';
-import {useEffect} from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import {useState, useEffect} from 'react';
+import ProfileScreen from "@/components/profile/ProfileScreen";
 
 
-export default function ProfileScreen() {
+export default function Profile() {
     const {user, isLoggedIn} = useAuthStore();
     const {wishlist, fetchWishlist} = useWishlistStore();
+    const [followerCount, setFollowerCount] = useState(0);
+    const [followingCount, setFollowingCount] = useState(0);
 
     useEffect(() => {
         if (isLoggedIn) fetchWishlist();
     }, [isLoggedIn]);
 
+    useEffect(() => {
+        if (!user) return;
+        const fetchFollowCounts = async () => {
+            const [{count: followers}, {count: following}] = await Promise.all([
+                supabase.from('follows').select('*', {count: 'exact', head: true}).eq('following_id', user.id),
+                supabase.from('follows').select('*', {count: 'exact', head: true}).eq('follower_id', user.id),
+            ]);
+            setFollowerCount(followers ?? 0);
+            setFollowingCount(following ?? 0);
+        };
+        fetchFollowCounts();
+    }, [user]);
+
     return (
-        <FlatList
-            style={{backgroundColor: '#fff'}}
-            data={wishlist}
-            numColumns={3}
-            keyExtractor={(item) => item.isbn}
-            ListHeaderComponent={
-                <View>
-                    {/* 프로필 영역 */}
-                    <View style={profileStyles.profileSection}>
-                        {/* 아바타 */}
-                        {user?.avatar_url ? (
-                            <Image source={{uri: user.avatar_url}} style={profileStyles.avatar}/>
-                        ) : (
-                            <View style={[profileStyles.avatar, profileStyles.avatarFallback]}>
-                                <Ionicons name='person-outline' size={36} color='#aaa'/>
-                            </View>
-                        )}
-
-                        {/* 팔로우/팔로워/찜 통계 */}
-                        <View style={profileStyles.statsRow}>
-                            <View style={profileStyles.statItem}>
-                                <Text style={profileStyles.statNumber}>{wishlist.length}</Text>
-                                <Text style={profileStyles.statLabel}>찜한책</Text>
-                            </View>
-                            <View style={profileStyles.statItem}>
-                                <Text style={profileStyles.statNumber}>0</Text>
-                                <Text style={profileStyles.statLabel}>팔로워</Text>
-                            </View>
-                            <View style={profileStyles.statItem}>
-                                <Text style={profileStyles.statNumber}>0</Text>
-                                <Text style={profileStyles.statLabel}>팔로잉</Text>
-                            </View>
-                        </View>
-                    </View>
-
-                    {/* 닉네임 & 소개 */}
-                    <View style={profileStyles.infoSection}>
-                        <Text style={profileStyles.nickname}>{user?.nickname ?? user?.name}</Text>
-                        {user?.bio ? <Text style={profileStyles.bio}>{user.bio}</Text> : null}
-                    </View>
-
-                    {/* 프로필 편집 버튼 */}
-                    <Pressable style={profileStyles.editButton}
-                    onPress={() => router.replace('/mypage')}>
-                        <Text style={profileStyles.editButtonText}>프로필 편집</Text>
-                    </Pressable>
-
-                    <Text style={profileStyles.sectionTitle}>찜한 책</Text>
-                </View>
-            }
-            renderItem={({item}) => (
-                <Image
-                    source={{uri: item.thumbnail}}
-                    style={profileStyles.bookThumbnail}
-                    contentFit='cover'
-                />
-            )}
-            ListEmptyComponent={
-                <View style={profileStyles.emptyContainer}>
-                    <Text style={profileStyles.emptyText}>찜한 책이 없습니다</Text>
-                </View>
-            }
+        <ProfileScreen
+            avatar_url={user?.avatar_url ?? null}
+            nickname={user?.nickname ?? user?.name ?? ''}
+            bio={user?.bio ?? null}
+            wishlist={wishlist}
+            followerCount={followerCount}
+            followingCount={followingCount}
+            isMyProfile={true}
+            onEditProfile={() => router.replace('/mypage')}
         />
     );
 }
-
