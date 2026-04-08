@@ -1,18 +1,11 @@
 import {Image} from "expo-image";
-import {Book} from "@/types/wishlist";
-import {View, Text, Pressable, DimensionValue} from 'react-native';
+import {BookItemProps} from "@/types/book";
+import {View, Text, Pressable} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 import {router} from "expo-router";
 import {commonStyles} from "@/styles/commonStyles";
 import {useBookStore} from '@/store/useBookStore';
 
-
-interface BookItemProps {
-    item: Book;
-    isWished: boolean;
-    onToggle: (item: Book) => void;
-    itemWidth: DimensionValue;
-}
 
 export const BookItem = ({item, isWished, onToggle, itemWidth}: BookItemProps) => {
     const {setSelectedBook} = useBookStore();

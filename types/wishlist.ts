@@ -1,20 +1,13 @@
-export interface Book {
-    isbn: string;
-    thumbnail: string;
-    title: string;
-    authors: string[];
-    price: number;
-    datetime: string;
-    contents: string;
-    publisher: string;
-}
+import {Book} from './book'
 
-export interface WishlistState {
-    wishlist: Book[];
-    toggleWishlist: (book: Book) => void;
-}
 
 export interface WishlistItem {
     isbn: string;
     thumbnail: string;
+}
+
+export interface WishlistStore {
+    wishlist: Book[];
+    fetchWishlist: () => Promise<void>;
+    toggleWishlist: (book: Book) => Promise<void>;
 }

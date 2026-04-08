@@ -1,24 +1,7 @@
 import {create} from 'zustand';
 import {supabase} from '@/lib/supabase';
-import {Book} from '@/types/book';
+import {Book, ReadStore} from '@/types/book';
 
-export interface ReadBook {
-    book: Book;
-    readAt: string;
-    rating: number;
-    review: string;
-    isPublic: boolean;
-}
-
-interface ReadStore {
-    readList: ReadBook[];
-    fetchReadList: () => Promise<void>;
-    toggleRead: (book: Book) => Promise<void>;
-    updateReview: (isbn: string, rating: number, review: string, readAt: string) => Promise<void>;
-    deleteBook: (isbn: string) => Promise<void>;
-    clearReadList: () => void;
-    togglePublic: (isbn: string) => Promise<void>;
-}
 
 export const useReadStore = create<ReadStore>((set, get) => ({
     readList: [],

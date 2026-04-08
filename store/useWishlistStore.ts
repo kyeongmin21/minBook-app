@@ -1,13 +1,8 @@
 import {create} from 'zustand';
 import {supabase} from '@/lib/supabase';
 import {Book} from "@/types/book";
+import {WishlistStore} from "@/types/wishlist";
 
-
-interface WishlistStore {
-    wishlist: Book[];
-    fetchWishlist: () => Promise<void>;
-    toggleWishlist: (book: Book) => Promise<void>;
-}
 
 export const useWishlistStore = create<WishlistStore>((set, get) => ({
     wishlist: [],

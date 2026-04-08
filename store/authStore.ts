@@ -1,25 +1,8 @@
 import {create} from 'zustand';
 import {supabase} from '@/lib/supabase';
 import {useReadStore} from "@/store/readStore";
+import {AuthStore} from '@/types/auth'
 
-interface User {
-    id: string;
-    user_id: string;
-    email: string;
-    name: string;
-    nickname: string;
-    bio: string;
-    avatar_url: string;
-}
-
-interface AuthStore {
-    user: User | null;
-    isLoggedIn: boolean;
-    isInitialized: boolean;
-    setUser: (user: User | null) => void;
-    fetchUser: () => Promise<void>;
-    logout: () => Promise<void>;
-}
 
 export const useAuthStore = create<AuthStore>((set) => ({
     user: null,
