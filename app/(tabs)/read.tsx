@@ -1,15 +1,16 @@
 import {View, Text, FlatList, Modal, TextInput, StyleSheet, ScrollView, KeyboardAvoidingView,
     Alert, Pressable, Platform,} from 'react-native';
 import {Image} from 'expo-image';
-import {useReadStore, ReadBook} from '@/store/readStore';
+import {ReadBook} from '@/types/book'
+import {useReadStore} from '@/store/readStore';
 import {readStyles} from '@/styles/readStyles';
 import {useAuthStore} from '@/store/authStore';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {useState, useEffect} from 'react';
 import {Ionicons} from '@expo/vector-icons';
 import {Loading} from '@/components/Loading';
 import LoginRequired from '@/components/LoginRequired';
 import MonthlyBarChart from '@/components/MonthlyBarChart';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export default function TabReadScreen() {
@@ -183,7 +184,7 @@ export default function TabReadScreen() {
                                     <Pressable style={readStyles.publicToggle}
                                                onPress={() => {
                                                    togglePublic(selected!.book.isbn);
-                                                   setSelected(prev => prev ? { ...prev, isPublic: !prev.isPublic } : null);
+                                                   setSelected((prev: typeof selected) => prev ? { ...prev, isPublic: !prev.isPublic } : null);
                                                }}>
                                         <Ionicons
                                             name={selected?.isPublic ? 'lock-open-outline' : 'lock-closed-outline'}
@@ -204,7 +205,7 @@ export default function TabReadScreen() {
                                     mode='date'
                                     display='compact'
                                     maximumDate={new Date()}
-                                    style={{marginLeft: -4, marginBottom: 4}}
+                                    style={{marginLeft: -12, marginBottom: 4}}
                                     onChange={(event, selectedDate) => {
                                         if (event.type === 'dismissed') return;
                                         if (selectedDate) {
