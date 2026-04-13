@@ -77,8 +77,3 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 느낀점
 ## ⚙️ 배포
  [웹링크](https://minmeanduck-book-app--6xdvgfr3n1.expo.app/)
 
-
-## 📌 TODO
-- [ ] useFollowStore 또는 React Query로 팔로우 상태 관리
-- [ ] 팔로우 / 언팔로우 토글
-- [ ] 팔로워 / 팔로잉 목록 페이지
