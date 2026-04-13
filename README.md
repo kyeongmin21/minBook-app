@@ -75,5 +75,5 @@ minBook App은 읽고 싶은 책을 저장하고, 읽은 책에 대한 느낀점
 
 
 ## ⚙️ 배포
- [웹링크](https://minmeanduck-book-app--6xdvgfr3n1.expo.app/)
+ [웹링크](https://minmeanduck-book-app--9kqnyqfvkr.expo.app)
 

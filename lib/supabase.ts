@@ -29,14 +29,14 @@ const storage = Platform.OS === 'web' ? {
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
 
-
-export const supabase = createClient(
-    supabaseUrl,
-    supabaseAnonKey, {
+// SSR 빌드 시 빈 값이면 초기화 건너뜀
+export const supabase = supabaseUrl
+    ? createClient(supabaseUrl, supabaseAnonKey, {
         auth: {
-            storage: storage, // 웹이면 undefined가 되어 에러를 피함
+            storage: storage,    // 웹이면 undefined가 되어 에러를 피함
             autoRefreshToken: true,
             persistSession: true,  // ← 로그인 성공하면 세션 자동으로 저장하겠다!
             detectSessionInUrl: false,
         },
-    });
+    })
+    : null as any;

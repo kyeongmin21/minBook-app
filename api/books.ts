@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 export const searchBooks = async (query: string) => {
-    const key = process.env.EXPO_PUBLIC_KAKAO_API_KEY;
+    const KAKAO_API_KEY = '0ac8845c91a68f8d47aa54ea1fb40611';
 
     try {
         const { data } = await axios.get('https://dapi.kakao.com/v3/search/book', {
             params: { query, size: 30, sort: '' },
             headers: {
-                Authorization: `KakaoAK ${key}`,
+                Authorization: `KakaoAK ${KAKAO_API_KEY}`,
                 KA: 'sdk/1.0.0 os/javascript origin/http://localhost:8081',
             },
         });

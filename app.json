@@ -2,7 +2,7 @@
     "expo": {
         "name": "book-app",
         "slug": "book-app",
-        "owner": "min",
+        "owner": "minmeanduck",
         "version": "1.0.0",
         "orientation": "portrait",
         "icon": "./assets/images/logo.png",
@@ -50,7 +50,10 @@
             "router": {},
             "eas": {
                 "projectId": "9b729677-3084-4214-8309-e6ab370da2a3"
-            }
+            },
+            "supabaseUrl": "https://zppdjwxceeddpeukwvvv.supabase.co",
+            "supabaseAnonKey": "sb_publishable_RO-T42v_jSEOzr9s9LLt-A_8eUCviNi",
+            "kakaoRestApiKey": "0ac8845c91a68f8d47aa54ea1fb40611"
         }
     }
 }

@@ -9,14 +9,13 @@ import {useWishlistStore} from '@/store/useWishlistStore';
 import {detailStyles} from '@/styles/detailStyles';
 import {useReadStore} from '@/store/readStore';
 import {useBookStore} from '@/store/useBookStore';
-import {useAuthStore} from "@/store/authStore";
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fetchPublicReviews} from "@/api/publicReviews";
 
 
 export default function BookDetailScreen() {
+    const KAKAO_API_KEY ='0ac8845c91a68f8d47aa54ea1fb40611'
     const insets = useSafeAreaInsets();
-    const {user} = useAuthStore();
     const {selectedBook} = useBookStore();
     const {detail} = useLocalSearchParams();
     const {readList, toggleRead} = useReadStore();
@@ -66,7 +65,7 @@ export default function BookDetailScreen() {
             const isbnOnly = isbn.split(' ').pop();// 13자리 isbn만 사용
             const res = await fetch(
                 `https://dapi.kakao.com/v3/search/book?query=${isbnOnly}&target=isbn`,
-                {headers: {Authorization: `KakaoAK ${process.env.EXPO_PUBLIC_KAKAO_API_KEY}`}}
+                {headers: {Authorization: `KakaoAK ${KAKAO_API_KEY}`}}
             );
             const json = await res.json();
 

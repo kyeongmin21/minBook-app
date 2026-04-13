@@ -1,0 +1,10 @@
+{
+    "build": {
+        "production": {
+            "env": {
+                "EXPO_PUBLIC_SUPABASE_URL": "https://zppdjwxceeddpeukwvvv.supabase.co",
+                "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_RO-T42v_jSEOzr9s9LLt-A_8eUCviNi"
+            }
+        }
+    }
+}
