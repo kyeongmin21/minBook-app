@@ -7,7 +7,6 @@ import {View, Text, TextInput, KeyboardAvoidingView, Pressable, Platform, Alert}
 import {signUpStyles} from "@/styles/signUpStyles";
 
 
-
 export default function LoginScreen() {
     const router = useRouter();
     const [email, setEmail] = useState('');
@@ -32,10 +31,13 @@ export default function LoginScreen() {
 
         if (error) {
             if (error.message.includes('Invalid login credentials')) {
+                alert('이메일 또는 비밀번호가 틀렸어요.')
                 Alert.alert('오류', '이메일 또는 비밀번호가 틀렸어요.');
             } else if (error.message.includes('Too Many Requests')) {
+                alert('잠시 후 다시 시도해주세요.')
                 Alert.alert('잠깐!', '잠시 후 다시 시도해주세요.');
             } else {
+                alert(error.message)
                 Alert.alert('오류', error.message);
             }
             return;
