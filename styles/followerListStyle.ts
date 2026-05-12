@@ -38,7 +38,8 @@ export const followerListStyles = StyleSheet.create({
     separator: {
         height: 1,
         backgroundColor: '#f0f0f0',
-        marginLeft: 76,
+        marginLeft: 15,
+        marginRight: 15,
     },
     emptyContainer: {
         padding: 40,
