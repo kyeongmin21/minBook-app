@@ -2,22 +2,8 @@ import {Image} from 'expo-image';
 import {View, Text, FlatList, Pressable} from 'react-native';
 import {profileStyles} from '@/styles/profileStyles';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import {Profile} from "@/types/profile";
 
-
-type Props = {
-    avatar_url: string | null;
-    nickname: string;
-    bio: string | null;
-    wishlist: {isbn: string; thumbnail: string}[];
-    followerCount: number;
-    followingCount: number;
-    isMyProfile: boolean;
-    isFollowing?: boolean;
-    onToggleFollow?: () => void;
-    onEditProfile?: () => void;
-    onPressFollowers: () => void;
-    backButton?: React.ReactNode;  // 뒤로가기 버튼 (있을 때만)
-};
 
 export default function ProfileScreen({
                                           avatar_url,
@@ -31,8 +17,9 @@ export default function ProfileScreen({
                                           onToggleFollow,
                                           onEditProfile,
                                           onPressFollowers,
+                                          onPressFollowings,
                                           backButton,
-                                      }: Props) {
+                                      }: Profile) {
     return (
         <FlatList
             style={{backgroundColor: '#fff'}}
@@ -63,10 +50,11 @@ export default function ProfileScreen({
                                 <Text style={profileStyles.statNumber}>{followerCount}</Text>
                                 <Text style={profileStyles.statLabel}>팔로워</Text>
                             </Pressable>
-                            <View style={profileStyles.statItem}>
+                            <Pressable style={profileStyles.statItem}
+                                       onPress={onPressFollowings}>
                                 <Text style={profileStyles.statNumber}>{followingCount}</Text>
                                 <Text style={profileStyles.statLabel}>팔로잉</Text>
-                            </View>
+                            </Pressable>
                         </View>
                     </View>
 

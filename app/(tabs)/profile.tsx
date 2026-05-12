@@ -38,6 +38,7 @@ export default function Profile() {
             followerCount={followerCount}
             followingCount={followingCount}
             onPressFollowers={() => router.push(`/profile/${user?.id}/followers`)}
+            onPressFollowings={() => router.push(`/profile/${user?.id}/followings`)}
             isMyProfile={true}
             onEditProfile={() => router.replace('/mypage')}
         />

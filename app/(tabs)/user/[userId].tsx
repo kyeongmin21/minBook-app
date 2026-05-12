@@ -77,6 +77,7 @@ export default function UserProfileScreen() {
             onToggleFollow={toggleFollow}
             onEditProfile={() => router.push('/(protected)/mypage')}
             onPressFollowers={() => router.push(`/profile/${profile?.id}/followers`)}
+            onPressFollowings={() => router.push(`/profile/${profile?.id}/followings`)}
             backButton={
                 <Pressable
                     style={{marginTop: insets.top, padding: 16}}
