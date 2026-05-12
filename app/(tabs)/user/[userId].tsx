@@ -3,11 +3,11 @@ import {router, useLocalSearchParams} from 'expo-router';
 import {supabase} from '@/lib/supabase';
 import {useAuthStore} from "@/store/authStore";
 import {useEffect, useState} from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import {useSafeAreaInsets} from "react-native-safe-area-context";
+import ProfileScreen from "@/components/profile/ProfileScreen";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import {UserProfile} from "@/types/user";
 import {WishlistItem} from "@/types/wishlist";
-import ProfileScreen from "@/components/profile/ProfileScreen";
 
 
 export default function UserProfileScreen() {
@@ -76,6 +76,7 @@ export default function UserProfileScreen() {
             isFollowing={isFollowing}
             onToggleFollow={toggleFollow}
             onEditProfile={() => router.push('/(protected)/mypage')}
+            onPressFollowers={() => router.push(`/profile/${profile?.id}/followers`)}
             backButton={
                 <Pressable
                     style={{marginTop: insets.top, padding: 16}}
