@@ -1,8 +1,8 @@
 import {Image} from 'expo-image';
 import {View, Text, FlatList, Pressable} from 'react-native';
-import {router} from 'expo-router';
 import {profileStyles} from '@/styles/profileStyles';
 import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 type Props = {
     avatar_url: string | null;
@@ -15,6 +15,7 @@ type Props = {
     isFollowing?: boolean;
     onToggleFollow?: () => void;
     onEditProfile?: () => void;
+    onPressFollowers: () => void;
     backButton?: React.ReactNode;  // 뒤로가기 버튼 (있을 때만)
 };
 
@@ -29,6 +30,7 @@ export default function ProfileScreen({
                                           isFollowing,
                                           onToggleFollow,
                                           onEditProfile,
+                                          onPressFollowers,
                                           backButton,
                                       }: Props) {
     return (
@@ -56,10 +58,11 @@ export default function ProfileScreen({
                                 <Text style={profileStyles.statNumber}>{wishlist.length}</Text>
                                 <Text style={profileStyles.statLabel}>찜한책</Text>
                             </View>
-                            <View style={profileStyles.statItem}>
+                            <Pressable style={profileStyles.statItem}
+                                       onPress={onPressFollowers}>
                                 <Text style={profileStyles.statNumber}>{followerCount}</Text>
                                 <Text style={profileStyles.statLabel}>팔로워</Text>
-                            </View>
+                            </Pressable>
                             <View style={profileStyles.statItem}>
                                 <Text style={profileStyles.statNumber}>{followingCount}</Text>
                                 <Text style={profileStyles.statLabel}>팔로잉</Text>

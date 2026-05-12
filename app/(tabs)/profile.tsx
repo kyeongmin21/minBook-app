@@ -37,6 +37,7 @@ export default function Profile() {
             wishlist={wishlist}
             followerCount={followerCount}
             followingCount={followingCount}
+            onPressFollowers={() => router.push(`/profile/${user?.id}/followers`)}
             isMyProfile={true}
             onEditProfile={() => router.replace('/mypage')}
         />
